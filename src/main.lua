@@ -1,7 +1,5 @@
-function main()
-    imgui.Begin()
-
-    imgui.Text("hi")
+function draw()
+    imgui.Begin("Luaver-Testing-Environment")
 
     imgui.End()
 end

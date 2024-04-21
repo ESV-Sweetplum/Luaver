@@ -2,6 +2,7 @@
   "name": "luaver",
   "version": "1.0.0",
   "description": "A framework designed to simplify plugin making in Quaver.",
+  "type": "module",
   "scripts": {
   },
   "repository": {

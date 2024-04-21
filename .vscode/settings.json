@@ -3,6 +3,7 @@
         "lowercase-global",
     ],
     "Lua.diagnostics.globals": [
-        "imgui"
+        "imgui",
+        "router"
     ]
 }

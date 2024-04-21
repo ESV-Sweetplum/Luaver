@@ -1,5 +1,5 @@
 local router = {}
-local routerHistory = { "entry" }
+local routerHistory = { "main" }
 
 function router.push(path)
     table.insert(routerHistory, path)

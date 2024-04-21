@@ -42,24 +42,23 @@ function transpiler() {
     addToOutput(fileData.join("\n"));
   });
 
-  // Transpile page dictionary and entry file
+  // Transpile page dictionary and layout file
 
   luaTableStr.push("}");
 
-  const entryFile = readFileSync("src/main.lua", "utf-8").split("\n");
+  const layoutFile = readFileSync("src/_layout.lua", "utf-8").split("\n");
 
-  const entryIndex = entryFile.findIndex((item) =>
-    item.includes("imgui.Begin(")
-  );
+  const endIndex = layoutFile.findIndex((item) => item.includes("imgui.End()"));
 
-  entryFile.splice(
-    entryIndex + 1,
+  layoutFile.splice(endIndex, 0, luaTableStr.join("\n"));
+
+  layoutFile.splice(
+    endIndex + 1,
     0,
     "routerDictionary[routerHistory[#routerHistory]]()"
   );
-  entryFile.splice(entryIndex + 1, 0, luaTableStr.join("\n"));
 
-  addToOutput(entryFile.join("\n"));
+  addToOutput(layoutFile.join("\n"));
 
   writeFileSync("plugin.lua", output.replaceAll("\n\n", "\n"));
 }

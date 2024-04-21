@@ -3,7 +3,7 @@ function main(params)
 
     Text("Here are examples of built-in globals:")
     Text("Selected StartTime: ", Region.startTime, "Selected EndTime: ", Region.endTime)
-    Button("Detect selected objects within selection region", function() getSelectedObjects() end)
+    Button("Update selected objects cache", getSelectedObjects)
 
     Text("Detected Notes: ", #selected.notes) -- Either use the selected global,
     Text("Detected Lines: ", #SelectedLines)  -- or use Selected___ for currently selected objects.

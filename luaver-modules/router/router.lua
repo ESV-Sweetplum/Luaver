@@ -5,10 +5,10 @@
 router = {} ---@type Router --- Router object. Use `push` to navigate to a designated page, or `pop` to go to a previous page.
 routerHistory = { "main" } ---The order of navigated pages can be found here. The first element should always be `main`.
 
----Go to a designated page. `path` will be identical as the relative file path.
----@param path string
+---Go to a designated page. `path` will be identical as the relative file path. If `path` is not given, returns to home page.
+---@param path? string
 function router.push(path)
-    table.insert(routerHistory, path)
+    table.insert(routerHistory, path or "main")
 end
 
 ---Go to the previous page.

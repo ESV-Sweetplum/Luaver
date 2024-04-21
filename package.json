@@ -4,7 +4,9 @@
   "description": "A framework designed to simplify plugin making in Quaver.",
   "type": "module",
   "scripts": {
-    "watch": "node luaver-js/watch"
+    "watch": "node luaver-js/watch",
+    "build": "node luaver-js/transpiler",
+    "export": "node luaver-js/export"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   },
   "homepage": "https://github.com/ESV-Sweetplum/Luaver#readme",
   "dependencies": {
+    "adm-zip": "^0.5.12",
     "chalk": "^5.3.0",
     "chokidar": "^3.6.0"
   }

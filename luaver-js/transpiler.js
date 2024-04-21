@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "fs";
-import { getFilesRecursively } from "./getFilesRecursively.js";
+import { getFilesRecursively } from "./lib/getFilesRecursively.js";
 
 export default function transpiler() {
   let output = "";

@@ -11,28 +11,31 @@ selected = {
 }
 
 function getSelectedObjects()
-    local region = getSelectedRegion()
+    SelectedNotes = {}
+    SelectedLines = {}
+    SelectedSVs = {}
+    SelectedBookmarks = {}
 
     for _, v in pairs(map.HitObjects) do
-        if (v.StartTime >= region.startTime) and (v.StartTime <= region.endTime) then
+        if (v.StartTime >= Region.startTime) and (v.StartTime <= Region.endTime) then
             table.insert(SelectedNotes, v)
         end
     end
 
     for _, v in pairs(map.TimingPoints) do
-        if (v.StartTime >= region.startTime) and (v.StartTime <= region.endTime) then
+        if (v.StartTime >= Region.startTime) and (v.StartTime <= Region.endTime) then
             table.insert(SelectedLines, v)
         end
     end
 
     for _, v in pairs(map.ScrollVelocities) do
-        if (v.StartTime >= region.startTime) and (v.StartTime <= region.endTime) then
+        if (v.StartTime >= Region.startTime) and (v.StartTime <= Region.endTime) then
             table.insert(SelectedSVs, v)
         end
     end
 
     for _, v in pairs(map.Bookmarks) do
-        if (v.StartTime >= region.startTime) and (v.StartTime <= region.endTime) then
+        if (v.StartTime >= Region.startTime) and (v.StartTime <= Region.endTime) then
             table.insert(SelectedBookmarks, v)
         end
     end
@@ -48,6 +51,8 @@ function getSelectedObjectsState()
     SelectedLines = state.GetValue("SelectedLines") or {}
     SelectedSVs = state.GetValue("SelectedSVs") or {}
     SelectedBookmarks = state.GetValue("SelectedBookmarks") or {}
+
+    Region = getSelectedRegion()
 
     setSelectedTable()
 end

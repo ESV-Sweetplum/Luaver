@@ -131,4 +131,4 @@ plugin.lua
 settings.ini
 
 # folder contents
-src/pages/** */
+src/pages/*

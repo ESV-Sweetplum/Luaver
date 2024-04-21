@@ -33,8 +33,8 @@ export default function transpiler() {
       .replaceAll("\\", "/")
       .slice(1);
     fileData[fnIndex] = fileData[fnIndex].replace(
-      /[A-z_][A-z_0-9]*\(\)/,
-      `pages_${pageName.replaceAll("/", "")}()`
+      /[A-z_][A-z_0-9]*\(([A-z_0-9]*)\)/,
+      `pages_${pageName.replaceAll("/", "")}($1)`
     ); // Replace function name with route
 
     luaTableStr.push(

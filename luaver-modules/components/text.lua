@@ -1,5 +1,5 @@
 ---Creates an `imgui.Text` element. If multiple parameters are given, they are combined and separated with a space.
----@param ... string
+---@param ... string | number
 function Text(...)
     local tbl = {}
 

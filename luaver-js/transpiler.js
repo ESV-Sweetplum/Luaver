@@ -59,6 +59,8 @@ export default function transpiler() {
     "routerDictionary[routerHistory[#routerHistory]]()"
   );
 
+  layoutFile.splice(endIndex + 1, 0, "getSelectedObjectsState()");
+
   addToOutput(layoutFile.join("\n"));
 
   writeFileSync("plugin.lua", output.replaceAll("\n\n", "\n"));

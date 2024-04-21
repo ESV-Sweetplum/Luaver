@@ -1,9 +1,9 @@
 {
-    "Lua.diagnostics.disable": [
-        "lowercase-global",
-    ],
-    "Lua.diagnostics.globals": [
-        "imgui",
-        "router"
-    ]
+  "Lua.diagnostics.disable": ["lowercase-global"],
+  "Lua.diagnostics.globals": [
+    "imgui",
+    "router",
+    "utils",
+    "map"
+]
 }

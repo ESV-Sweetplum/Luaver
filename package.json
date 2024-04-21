@@ -1,0 +1,21 @@
+{
+  "name": "luaver",
+  "version": "1.0.0",
+  "description": "A framework designed to simplify plugin making in Quaver.",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ESV-Sweetplum/Luaver.git"
+  },
+  "keywords": [
+    "Quaver",
+    "Quavergame"
+  ],
+  "author": "ESV-Sweetplum",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ESV-Sweetplum/Luaver/issues"
+  },
+  "homepage": "https://github.com/ESV-Sweetplum/Luaver#readme"
+}

@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { getFilesRecursively } from "./getFilesRecursively.js";
 
-function transpiler() {
+export default function transpiler() {
   let output = "";
 
   function addToOutput(str) {
@@ -26,6 +26,7 @@ function transpiler() {
       .split("\n")
       .filter((str) => str); // Filter out empty lines
     const fnIndex = fileData.findIndex((item) => item.includes("function"));
+    if (fnIndex === -1) return;
     let pageName = pagePath
       .replace("src\\pages", "")
       .replace(".lua", "")
@@ -68,5 +69,3 @@ transpiler();
 function getFile(relPath) {
   return readFileSync(relPath, "utf-8");
 }
-
-export default transpiler;

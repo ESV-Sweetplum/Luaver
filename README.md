@@ -4,12 +4,13 @@ Luaver is a framework designed to simplify plugin making in Quaver. It uses Node
 
 ## Installation / Setup (temporary, will change soon)
 
-1. Download the repository using the green `<> Code` button at the top right of the repository page
-2. Drag the entire folder into your `Quaver/Plugins` folder
-3. Add `settings.ini` to the folder, and set up your settings
-4. Add `main.lua` to `src/pages`, with one function `main()`.
-5. Open a CLI, and run `npm i` in the plugin's root folder.
-6. Generate `plugin.lua` using `npm run build`.
+1. Install [Node.js](https://nodejs.org/en/download) if you haven't already.
+2. Download the repository using the green `<> Code` button at the top right of the repository page
+3. Drag the entire folder into your `Quaver/Plugins` folder
+4. Add `settings.ini` to the folder, and set up your settings
+5. Add `main.lua` to `src/pages`, with one function `main()`.
+6. Open a CLI, and run `npm i` in the plugin's root folder.
+7. Generate `plugin.lua` using `npm run build`.
 
 ## Usage and Development
 

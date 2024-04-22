@@ -1,6 +1,6 @@
 Region = {
-    startTime = -1e304,
-    endTime = -1e304
+    startTime = -1,
+    endTime = -1
 }
 
 ---@class Region
@@ -10,7 +10,7 @@ Region = {
 ---Gets the start and end times of the selected region.
 ---@return Region
 function getSelectedRegion()
-    if (#state.SelectedHitObjects == 0) then return { startTime = -1e304, endTime = -1e304 } end
+    if (#state.SelectedHitObjects == 0) then return { startTime = -1, endTime = -1 } end
     if (#state.SelectedHitObjects == 1) then
         return {
             startTime = state.SelectedHitObjects[1].StartTime,

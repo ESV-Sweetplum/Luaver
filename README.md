@@ -24,7 +24,7 @@ When you're finished, run `npm run export`. The plugin zip folder will be create
 
 - Automatic state management
 - `imgui` inputs (Integer+, Float+, Text, Slider, Combo, Checkbox, RadioBoolean, etc.)
-- Start and off offsets automatic computation (usage would be as a global variable)
+- ~~Start and end offsets automatic computation (usage would be as a global variable)~~
 - ~~Built in finder functions, such as `get__InRange()` (would apply to hitobjects, timing points, scroll velocities, and bookmarks)~~ (Implemented as globals)
 - ~~Built in object generators: `sv(time, multiplier) => utils.CreateScrollVelocity(time, multiplier)`~~
 - Pass parameters to `router.push`

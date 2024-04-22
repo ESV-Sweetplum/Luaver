@@ -1,5 +1,9 @@
 # Luaver
 
+![Commit Activity](https://img.shields.io/github/commit-activity/w/ESV-Sweetplum/Luaver)
+![GitHub License](https://img.shields.io/github/license/ESV-Sweetplum/Luaver)
+
+
 Luaver is a framework designed to simplify plugin making in Quaver. It uses Node.js to automatically transform a multi-file, complex codebase into a single-file plugin ready for use. It comes built in with `imgui` wrappers, a fully-fledged routing system, and more features soon to come.
 
 ## Installation / Setup (temporary, will change soon)

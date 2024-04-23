@@ -1,1 +1,1 @@
-inputCounter = 1
+inputCounter = 1 ---@type integer

@@ -5,6 +5,7 @@
     "router",
     "utils",
     "map",
-    "state"
-]
+    "state",
+    "routerDictionary"
+  ]
 }

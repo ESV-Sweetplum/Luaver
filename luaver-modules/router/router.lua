@@ -8,6 +8,7 @@ routerHistory = { "main" } ---The order of navigated pages can be found here. Th
 ---Go to a designated page. `path` will be identical as the relative file path. If `path` is not given, returns to home page.
 ---@param path? string
 function router.push(path)
+    if (routerHistory[#routerHistory] == path) then return end
     table.insert(routerHistory, path or "main")
 end
 

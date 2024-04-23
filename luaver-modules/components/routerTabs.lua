@@ -6,8 +6,10 @@ function RouterTabs(tabNames, tabRoutes)
 
     for idx, v in pairs(tabNames) do
         if (imgui.BeginTabItem(v)) then
-            router.push(tabRoutes[idx])
             imgui.EndTabItem()
+        end
+        if (imgui.IsItemClicked()) then
+            router.push(tabRoutes[idx])
         end
     end
 

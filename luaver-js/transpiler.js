@@ -19,7 +19,7 @@ export default function transpiler() {
 
   const pages = getFilesRecursively("./src/pages");
 
-  let luaTableStr = [`local routerDictionary = {`];
+  let luaTableStr = [`routerDictionary = {`];
 
   pages.forEach((pagePath) => {
     const fileData = getFile(pagePath)
@@ -52,14 +52,9 @@ export default function transpiler() {
   const endIndex = layoutFile.findIndex((item) => item.includes("imgui.End()"));
 
   layoutFile.splice(endIndex, 0, luaTableStr.join("\n"));
+  layoutFile.splice(endIndex + 1, 0, "drawExtension()");
 
-  layoutFile.splice(
-    endIndex + 1,
-    0,
-    "routerDictionary[routerHistory[#routerHistory]]()"
-  );
-
-  layoutFile.splice(endIndex + 1, 0, "getSelectedObjectsState()");
+  //   layoutFile.splice(endIndex + 1, 0, "getSelectedObjectsState()");
 
   addToOutput(layoutFile.join("\n"));
 

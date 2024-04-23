@@ -16,11 +16,7 @@ function getSelectedObjects()
     SelectedSVs = {}
     SelectedBookmarks = {}
 
-    for _, v in pairs(map.HitObjects) do
-        if (v.StartTime >= Region.startTime) and (v.StartTime <= Region.endTime) then
-            table.insert(SelectedNotes, v)
-        end
-    end
+    SelectedNotes = state.SelectedHitObjects
 
     for _, v in pairs(map.TimingPoints) do
         if (v.StartTime >= Region.startTime) and (v.StartTime <= Region.endTime) then
@@ -52,7 +48,14 @@ function getSelectedObjectsState()
     SelectedSVs = state.GetValue("SelectedSVs") or {}
     SelectedBookmarks = state.GetValue("SelectedBookmarks") or {}
 
+    local oldStart = Region.startTime
+    local oldEnd = Region.endTime
+
     Region = getSelectedRegion()
+
+    if (oldStart ~= Region.startTime) or (oldEnd ~= Region.endTime) then
+        getSelectedObjects()
+    end
 
     setSelectedTable()
 end

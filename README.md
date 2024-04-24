@@ -3,7 +3,6 @@
 ![Commit Activity](https://img.shields.io/github/commit-activity/w/ESV-Sweetplum/Luaver)
 ![GitHub License](https://img.shields.io/github/license/ESV-Sweetplum/Luaver)
 
-
 Luaver is a framework designed to simplify plugin making in Quaver. It uses Node.js to automatically transform a multi-file, complex codebase into a single-file plugin ready for use. It comes built in with `imgui` wrappers, a fully-fledged routing system, and more features soon to come.
 
 ## Installation / Setup (temporary, will change soon)
@@ -26,12 +25,14 @@ When you're finished, run `npm run export`. The plugin zip folder will be create
 
 ## Future Features
 
-- Automatic state management
-- `imgui` inputs (Integer+, Float+, Text, Slider, Combo, Checkbox, RadioBoolean, etc.)
+- ~~Automatic state management~~
+- ~~`imgui` inputs (Integer+, Float+, Text, Slider, Combo, Checkbox, RadioBoolean, etc.)~~
 - ~~Start and end offsets automatic computation (usage would be as a global variable)~~
 - ~~Built in finder functions, such as `get__InRange()` (would apply to hitobjects, timing points, scroll velocities, and bookmarks)~~ (Implemented as globals)
 - ~~Built in object generators: `sv(time, multiplier) => utils.CreateScrollVelocity(time, multiplier)`~~
-- Pass parameters to `router.push`
+- ~~Pass parameters to `router.push`~~
+- Styling support
+- Menu, dropdown and plot support
 
 ## Special Thanks To:
 

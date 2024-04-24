@@ -4,7 +4,7 @@
 ---@param max number
 ---@return number
 function clamp(value, min, max)
-  return math.max(math.min(max, value), min)
+    return math.max(math.min(max, value), min)
 end
 
 math.clamp = clamp

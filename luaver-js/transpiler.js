@@ -1,7 +1,7 @@
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, rmSync, existsSync } from "fs";
 import { getFilesRecursively } from "./lib/getFilesRecursively.js";
 
-export default function transpiler() {
+export default async function transpiler() {
   let output = "";
 
   function addToOutput(str) {
@@ -25,6 +25,7 @@ export default function transpiler() {
     const fileData = getFile(pagePath)
       .split("\n")
       .filter((str) => str); // Filter out empty lines
+
     const fnIndex = fileData.findIndex((item) => item.includes("function"));
     if (fnIndex === -1) return;
     let pageName = pagePath
@@ -40,6 +41,24 @@ export default function transpiler() {
     luaTableStr.push(
       `['${pageName}'] = pages_${pageName.replaceAll("/", "")},`
     );
+
+    const settingsIndices = locateIndices(fileData, "settings"); // Greedy search settings
+    if (settingsIndices.length > 1) {
+      const desiredIndex = settingsIndices[1];
+      fileData.splice(
+        desiredIndex,
+        0,
+        `retrieveStateVariables("${pageName}", settings)`
+      );
+
+      const endIndex = locateIndices(fileData, "end").slice(-1); // Greedy search end of function
+      fileData.splice(
+        endIndex,
+        0,
+        `saveStateVariables("${pageName}", settings)`
+      );
+    }
+
     addToOutput(fileData.join("\n"));
   });
 
@@ -58,6 +77,10 @@ export default function transpiler() {
 
   addToOutput(layoutFile.join("\n"));
 
+  rmSync("plugin.lua");
+
+  await sleep(0.1);
+
   writeFileSync("plugin.lua", output.replaceAll("\n\n", "\n"));
 }
 
@@ -65,4 +88,20 @@ transpiler();
 
 function getFile(relPath) {
   return readFileSync(relPath, "utf-8");
+}
+
+export async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function locateIndices(arr, searchTerm) {
+  const indices = [];
+
+  arr.forEach((item, idx) => {
+    if (item.includes(searchTerm)) {
+      indices.push(idx);
+    }
+  });
+
+  return indices;
 }

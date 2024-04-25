@@ -3,7 +3,7 @@ function draw()
 
     -- SHARED ELEMENTS ACROSS ALL PAGES GO BEFORE IMGUI.END()
 
-    RouterTabs({ "Starting", "Globals", "Inputs" }, { "main", "globalsDemo", "inputsDemo" })
+    RouterTabs({ "Info", "Globals", "Inputs" }, { "main", "globalsDemo", "inputsDemo" })
 
     imgui.End()
 end

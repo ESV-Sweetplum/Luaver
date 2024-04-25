@@ -13,7 +13,7 @@ chokidar
       `\nDetected event ${chalk.red(event)} in path ${chalk.blue(path)}.`
     );
     const startTime = Date.now();
-    transpiler();
+    await transpiler();
     console.log(
       `Transpiled src in ${chalk.greenBright(`${Date.now() - startTime}ms`)}.`
     );

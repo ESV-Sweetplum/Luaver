@@ -133,3 +133,6 @@ settings.ini
 # folder contents
 src/pages/*
 !src/pages/main.lua
+!src/pages/paramDemo.lua
+!src/pages/globalsDemo.lua
+!src/pages/inputsDemo.lua

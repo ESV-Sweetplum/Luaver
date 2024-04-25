@@ -5,7 +5,7 @@ function RouterTabs(tabNames, tabRoutes)
     imgui.BeginTabBar("routerTab")
 
     for idx, v in pairs(tabNames) do
-        if (imgui.BeginTabItem(v)) then
+        if (imgui.BeginTabItem(v, routerHistory[#routerHistory]) == tabRoutes[idx]) then
             imgui.EndTabItem()
         end
         if (imgui.IsItemClicked()) then

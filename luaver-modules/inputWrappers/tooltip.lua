@@ -1,3 +1,5 @@
+---Creates a tooltip (?).
+---@param text string
 function Tooltip(text)
   imgui.SameLine(0, 4)
   imgui.TextDisabled("(?)")

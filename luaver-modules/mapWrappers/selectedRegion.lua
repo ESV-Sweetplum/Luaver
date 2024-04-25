@@ -1,11 +1,11 @@
-Region = {
-    startTime = -1,
-    endTime = -1
-}
-
 ---@class Region
 ---@field startTime number
 ---@field endTime number
+
+Region = {
+    startTime = -1,
+    endTime = -1
+} ---@type Region
 
 ---Gets the start and end times of the selected region.
 ---@return Region

@@ -13,44 +13,29 @@ function InputInt(label, value, readOnly)
     return value
 end
 
----Returns a state managed `imgui.InputInt2` element. If `readOnly = true`, then the input will not be alterable.
+---Returns a state managed `imgui.InputInt2` element.
 ---@param label string
 ---@param value integer[]
----@param readOnly? boolean
 ---@return integer[]
-function InputInt2(label, value, readOnly)
-    if (readOnly) then
-        _, value = imgui.InputInt2(label, value)
-    else
-        _, value = imgui.InputInt2(label, value)
-    end
+function InputInt2(label, value)
+    _, value = imgui.InputInt2(label, value)
     return value
 end
 
----Returns a state managed `imgui.InputInt3` element. If `readOnly = true`, then the input will not be alterable.
+---Returns a state managed `imgui.InputInt3` element.
 ---@param label string
 ---@param value integer[]
----@param readOnly? boolean
 ---@return integer[]
-function InputInt3(label, value, readOnly)
-    if (readOnly) then
-        _, value = imgui.InputInt3(label, value)
-    else
-        _, value = imgui.InputInt3(label, value)
-    end
+function InputInt3(label, value)
+    _, value = imgui.InputInt3(label, value)
     return value
 end
 
----Returns a state managed `imgui.InputInt4` element. If `readOnly = true`, then the input will not be alterable.
+---Returns a state managed `imgui.InputInt4` element.
 ---@param label string
 ---@param value integer[]
----@param readOnly? boolean
 ---@return integer[]
-function InputInt4(label, value, readOnly)
-    if (readOnly) then
-        _, value = imgui.InputInt4(label, value)
-    else
-        _, value = imgui.InputInt4(label, value)
-    end
+function InputInt4(label, value)
+    _, value = imgui.InputInt4(label, value)
     return value
 end

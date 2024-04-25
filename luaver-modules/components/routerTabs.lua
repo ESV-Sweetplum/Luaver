@@ -1,4 +1,4 @@
----Takes two equal-sized tables, and returns a tab bar. The first element of `tabName` creates a name that goes to the first element of `tabRoutes`.
+---Takes two equal-sized tables, and returns a tab bar. The first element of `tabName` creates a name that goes to the first element of `tabRoutes`, etc.
 ---@param tabNames string[]
 ---@param tabRoutes string[]
 function RouterTabs(tabNames, tabRoutes)

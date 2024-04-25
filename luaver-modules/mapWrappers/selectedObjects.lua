@@ -11,10 +11,10 @@ selected = {
 }
 
 function getSelectedObjects()
-    SelectedNotes = {}
-    SelectedLines = {}
-    SelectedSVs = {}
-    SelectedBookmarks = {}
+    SelectedNotes = {} ---@type HitObjectInfo[]
+    SelectedLines = {} ---@type TimingPointInfo[]
+    SelectedSVs = {} ---@type ScrollVelocityInfo[]
+    SelectedBookmarks = {} ---@type BookmarkInfo[]
 
     SelectedNotes = state.SelectedHitObjects
 
@@ -43,10 +43,10 @@ function getSelectedObjects()
 end
 
 function getSelectedObjectsState()
-    SelectedNotes = state.GetValue("SelectedNotes") or {}
-    SelectedLines = state.GetValue("SelectedLines") or {}
-    SelectedSVs = state.GetValue("SelectedSVs") or {}
-    SelectedBookmarks = state.GetValue("SelectedBookmarks") or {}
+    SelectedNotes = state.GetValue("SelectedNotes") or {} ---@type HitObjectInfo[]
+    SelectedLines = state.GetValue("SelectedLines") or {} ---@type TimingPointInfo[]
+    SelectedSVs = state.GetValue("SelectedSVs") or {} ---@type ScrollVelocityInfo[]
+    SelectedBookmarks = state.GetValue("SelectedBookmarks") or {} ---@type BookmarkInfo[]
 
     local oldStart = Region.startTime
     local oldEnd = Region.endTime

@@ -3,7 +3,7 @@ function main()
     imgui.Separator()
     imgui.PushItemWidth(150)
 
-    InputInt2("Selected Start/End Times", { Region.startTime, Region.endTime }, true)
+    InputInt2("Selected Start/End Times", { Region.startTime, Region.endTime })
     -- The Region global shows you the start and end times of the user selection.
 
     InputInt("Detected Notes", #selected.notes, true) -- Either use the selected global,

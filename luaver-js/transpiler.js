@@ -79,7 +79,7 @@ export default async function transpiler() {
 
   if (existsSync("plugin.lua")) rmSync("plugin.lua");
 
-  await sleep(69);
+  await sleep(0.1);
 
   writeFileSync("plugin.lua", output.replaceAll("\n\n", "\n"));
 }

@@ -1,4 +1,10 @@
-import { readFileSync, writeFileSync, rmSync, existsSync } from "fs";
+import {
+  readFileSync,
+  writeFileSync,
+  rmSync,
+  existsSync,
+  renameSync,
+} from "fs";
 import { getFilesRecursively } from "./lib/getFilesRecursively.js";
 
 export default async function transpiler() {
@@ -78,10 +84,8 @@ export default async function transpiler() {
   addToOutput(layoutFile.join("\n"));
 
   if (existsSync("plugin.lua")) rmSync("plugin.lua");
-
-  await sleep(0.1);
-
-  writeFileSync("plugin.lua", output.replaceAll("\n\n", "\n"));
+  writeFileSync("temp.lua", output.replaceAll("\n\n", "\n"));
+  renameSync("temp.lua", "plugin.lua");
 }
 
 transpiler();

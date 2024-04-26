@@ -77,9 +77,7 @@ export default async function transpiler() {
 
   addToOutput(layoutFile.join("\n"));
 
-  if (existsSync("plugin.lua")) {
-    rmSync("plugin.lua");
-  }
+  if (existsSync("plugin.lua")) rmSync("plugin.lua");
 
   await sleep(69);
 

@@ -11,12 +11,10 @@ selected = {
 }
 
 function getSelectedObjects()
-    SelectedNotes = {} ---@type HitObjectInfo[]
+    SelectedNotes = state.SelectedHitObjects ---@type HitObjectInfo[]
     SelectedLines = {} ---@type TimingPointInfo[]
     SelectedSVs = {} ---@type ScrollVelocityInfo[]
     SelectedBookmarks = {} ---@type BookmarkInfo[]
-
-    SelectedNotes = state.SelectedHitObjects
 
     for _, v in pairs(map.TimingPoints) do
         if (v.StartTime >= Region.startTime) and (v.StartTime <= Region.endTime) then

@@ -102,9 +102,7 @@ export function locateIndices(arr, searchTerm) {
   const indices = [];
 
   arr.forEach((item, idx) => {
-    if (item.includes(searchTerm)) {
-      indices.push(idx);
-    }
+    if (item.includes(searchTerm)) indices.push(idx);
   });
 
   return indices;

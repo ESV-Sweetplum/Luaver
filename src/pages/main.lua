@@ -19,5 +19,4 @@ function main(params)
     -- if (hasChanged(Region.startTime)) or (hasChanged(Region.endTime)) then
     --     print("Selected Region Has Changed")
     -- end
-    print(cacheCounter)
 end

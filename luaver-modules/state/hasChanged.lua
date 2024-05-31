@@ -1,3 +1,5 @@
+cacheCounter = 0
+
 ---Returns a boolean that tells when a variable has changed.
 ---@param var number | string | boolean
 ---@return boolean

@@ -35,9 +35,9 @@ export default async function transpiler() {
     const fnIndex = fileData.findIndex((item) => item.includes("function"));
     if (fnIndex === -1) return;
     let pageName = pagePath
-      .replace("src\\pages", "")
-      .replace(".lua", "")
       .replaceAll("\\", "/")
+      .replace("src/pages", "")
+      .replace(".lua", "")
       .slice(1);
     fileData[fnIndex] = fileData[fnIndex].replace(
       /[A-z_][A-z_0-9]*\(([A-z_0-9]*)\)/,

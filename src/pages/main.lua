@@ -14,7 +14,7 @@ function main(params)
     imgui.Text("src/pages.")
     imgui.PopStyleColor()
     if (hasChanged(Region.startTime)) then
-        Text(Region.startTime)
+        print(Region.startTime)
     end
     -- if (hasChanged(Region.startTime)) or (hasChanged(Region.endTime)) then
     --     print("Selected Region Has Changed")

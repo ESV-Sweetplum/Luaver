@@ -9,5 +9,3 @@ function hasChanged(var)
   state.SetValue("cache_" .. cacheCounter, var)
   return returnCondition
 end
-
-state.hasChanged = hasChanged

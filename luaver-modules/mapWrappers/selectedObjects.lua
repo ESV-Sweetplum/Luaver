@@ -38,6 +38,8 @@ function getSelectedObjects()
     state.SetValue("SelectedLines", SelectedLines)
     state.SetValue("SelectedSVs", SelectedSVs)
     state.SetValue("SelectedBookmarks", SelectedBookmarks)
+
+    setSelectedTable()
 end
 
 function getSelectedObjectsState()
@@ -54,8 +56,6 @@ function getSelectedObjectsState()
     if (oldStart ~= Region.startTime) or (oldEnd ~= Region.endTime) then
         getSelectedObjects()
     end
-
-    setSelectedTable()
 end
 
 function setSelectedTable()

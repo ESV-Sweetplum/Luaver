@@ -5,7 +5,7 @@ cacheCounter = 0
 ---@return boolean
 function hasChanged(var)
   local oldValue = state.GetValue("cache_" .. cacheCounter)
-  local returnCondition = (oldValue == var)
+  local returnCondition = (oldValue ~= var)
 
   state.SetValue("cache_" .. cacheCounter, var)
   cacheCounter = cacheCounter + 1

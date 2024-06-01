@@ -9,6 +9,7 @@ import { getFilesRecursively } from "./lib/getFilesRecursively.js";
 
 export default async function transpiler() {
   let output = "";
+  const settings = JSON.parse(getFile("luaver-config.json"))
 
   function addToOutput(str) {
     output = `${output}\n\n${str}`;
@@ -18,7 +19,13 @@ export default async function transpiler() {
 
   const modules = getFilesRecursively("luaver-modules");
   modules.forEach((module) => {
-    addToOutput(getFile(module));
+    let fileLines = getFile(module).split("\n")
+    if (module.includes("drawExtension.lua")) {
+      const regionModuleLine = fileLines.findIndex((ln) => ln.includes("getSelectedObjectsState()"))
+      if (regionModuleLine === -1) return;
+      if (settings.automaticallyUpdateRegion === false) fileLines.splice(regionModuleLine, 1)
+    }
+    addToOutput(fileLines.join("\n"));
   });
 
   // Transpile Pages

@@ -38,4 +38,4 @@ When you're finished, run `npm run export`. The plugin zip folder will be create
 ## Special Thanks To:
 
 - [IceDynamix](https://github.com/IceDynamix/) for the intellisense file.
-- [Emik](https://github.com/Emik03) for the name.
+- [Emik](https://github.com/Emik03) for the name, and the [multiplotlines](https://github.com/Emik03/multiplotlines.lua) submodule.

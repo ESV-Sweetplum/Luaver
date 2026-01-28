@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "target": "ES2022",
+      "module": "commonjs",
+      "outDir": "dist",
+      "strict": false,
+      "lib": ["DOM", "DOM.Iterable", "ES2023"]
+    }
+}  

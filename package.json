@@ -1,0 +1,25 @@
+{
+    "name": "luaver",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "tsc && node dist"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ESV-Sweetplum/Luaver.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/ESV-Sweetplum/Luaver/issues"
+    },
+    "homepage": "https://github.com/ESV-Sweetplum/Luaver#readme",
+    "dependencies": {
+        "@types/node": "^25.0.10"
+    },
+    "devDependencies": {}
+}

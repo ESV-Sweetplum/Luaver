@@ -1,0 +1,6 @@
+{
+    sources: ["/plugin"],
+    lineSeparator: "\n",
+    disableVectorPacking: true,
+    dontRandomizeSeed: false,
+}

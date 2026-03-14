@@ -1,16 +1,15 @@
-import * as fs from 'fs';
 import LuaProcessor from '../interfaces/luaProcessor';
-
-const config = JSON.parse(fs.readFileSync('./luaverConfig.json', 'utf-8'));
+import luaverConfig from './getConfig';
 
 export default function processLuaFile(
     file: string | string[],
     processors: LuaProcessor[]
 ) {
     for (const processor of processors) {
-        if (typeof file === 'string') file = file.split(config.lineSeparator);
+        if (typeof file === 'string')
+            file = file.split(luaverConfig.lineSeparator);
         const processorFunction = processor.default;
-        file = processorFunction(file, config);
+        file = processorFunction(file, luaverConfig);
     }
 
     return file;

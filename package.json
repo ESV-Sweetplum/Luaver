@@ -19,7 +19,14 @@
     },
     "homepage": "https://github.com/ESV-Sweetplum/Luaver#readme",
     "dependencies": {
-        "@types/node": "^25.0.10"
+        "@types/ahocorasick": "^1.0.0",
+        "@types/node": "^25.0.10",
+        "ahocorasick": "^1.0.2",
+        "json5": "^2.2.3",
+        "luaparse": "^0.3.1"
     },
-    "devDependencies": {}
+    "devDependencies": {
+        "@types/json5": "^0.0.30",
+        "@types/luaparse": "^0.2.13"
+    }
 }

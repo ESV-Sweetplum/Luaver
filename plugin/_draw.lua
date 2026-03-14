@@ -1,3 +1,13 @@
-imgui.Begin("hi")
+function hi()
+    print("hi")
+    print("hi2")
+end
 
-imgui.End()
+function draw()
+    hi()
+end
+
+function math.sw()
+    print("hi")
+    print("hi2")
+end

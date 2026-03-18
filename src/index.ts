@@ -1,5 +1,6 @@
 import getProcessors from './utils/getProcessors';
 import processLuaFile from './utils/processLuaFile';
+import chalk from 'chalk';
 import * as fs from 'fs';
 import luaverConfig from './utils/getConfig';
 import { getFilesRecursively } from './utils/getFilesRecursively';
@@ -25,6 +26,7 @@ export default async function transpile() {
             (a: string, b: string) =>
                 +b.includes('.priority.') - +a.includes('.priority.')
         );
+
     const [nonEntryPaths, entryPaths] = paths.reduce(
         ([a1, a2], path: string) => {
             (entryPoints.some(
@@ -37,6 +39,24 @@ export default async function transpile() {
         },
         [[], []]
     );
+
+    if (entryPaths.length < entryPoints.length) {
+        console.log(
+            chalk.bgRedBright('LUAVER ERROR') +
+                chalk.red(
+                    ': You are missing one or more entry points. Please either add existing folders containing said entry points to your Luaver sources list, or create an entry point within an existing source.'
+                )
+        );
+        console.log(
+            chalk.red(
+                `\nMissing: ${entryPoints
+                    .filter((pt) => !entryPaths.some((f) => f.includes(pt)))
+                    .map((n) => `_${n}.lua`)
+                    .join(', ')}\n`
+            )
+        );
+        process.exit(1);
+    }
 
     const fileProcessors = processors.filter(
         (processor) => processor.context === 'file'

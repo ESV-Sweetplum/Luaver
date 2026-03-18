@@ -7,14 +7,6 @@ import * as fs from 'fs';
 import getAbsolutePath from './utils/getAbsolutePath';
 import * as path from 'path';
 
-console.log(
-    chalk.blueBright(
-        chalk.bold(
-            'Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.'
-        )
-    )
-);
-
 const debounce = (fn: Function, ms = 300) => {
     let timeoutId: ReturnType<typeof setTimeout>;
     return function (this: any, ...args: any[]) {
@@ -58,7 +50,15 @@ async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
     );
 }
 
-transpile();
+transpile().then(() => {
+    console.log(
+        chalk.blueBright(
+            chalk.bold(
+                'Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.'
+            )
+        )
+    );
+});
 
 const settingsData = `
 [Settings]

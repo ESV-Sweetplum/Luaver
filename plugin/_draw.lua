@@ -4,7 +4,6 @@ function hi()
 end
 
 hi()
-math.sw()
 
 function math.sw()
     print("hi")

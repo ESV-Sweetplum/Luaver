@@ -48,11 +48,11 @@ export default async function transpile() {
                 )
         );
         console.log(
-            chalk.red(
+            chalk.redBright(
                 `\nMissing: ${entryPoints
                     .filter((pt) => !entryPaths.some((f) => f.includes(pt)))
                     .map((n) => `_${n}.lua`)
-                    .join(', ')}\n`
+                    .join(', ')}`
             )
         );
         process.exit(1);
@@ -94,15 +94,15 @@ export default async function transpile() {
         );
     });
 
-    let output = processLuaFile(
-        fileData.join(luaverConfig.lineSeparator),
-        pluginProcessors
-    );
+    let output = fileData.join(luaverConfig.lineSeparator);
 
-    if (Array.isArray(output)) output = output.join(luaverConfig.lineSeparator);
     Object.entries(entryFileData).forEach(([entry, fileData]) => {
         output = `${output}${luaverConfig.lineSeparator}function ${entry}()${luaverConfig.lineSeparator}${fileData.join(luaverConfig.lineSeparator)}${luaverConfig.lineSeparator}end`;
     });
+
+    output = processLuaFile(output, pluginProcessors);
+    if (Array.isArray(output)) output = output.join(luaverConfig.lineSeparator);
+
     output = `PLUGIN_NAME="${luaverConfig.pluginName}";PLUGIN_VERSION="${luaverConfig.pluginVersion}";PLUGIN_AUTHOR="${luaverConfig.pluginAuthor}";PLUGIN_DESCRIPTION="${luaverConfig.pluginDescription}"${luaverConfig.lineSeparator}${output}`;
     if (luaverConfig.disableVectorPacking)
         output = `imgui_disable_vector_packing=true${luaverConfig.lineSeparator}${output}`;

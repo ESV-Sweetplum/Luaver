@@ -9,9 +9,11 @@ export default function LintUnusedFunctions(
     const separatorLength = config.lineSeparator.length;
 
     let linted = false;
-    let joinedInput = input.join(config.lineSeparator);
+    let iterationCount = 0;
+    let joinedInput = `${config.lineSeparator}${input.join(config.lineSeparator)}${config.lineSeparator}`;
 
-    while (!linted) {
+    while (!linted && iterationCount < 10) {
+        iterationCount++;
         linted = true;
 
         let functions = getFunctionList(input).filter(
@@ -53,9 +55,9 @@ export default function LintUnusedFunctions(
         finalEntries.reverse().forEach(([k, v]: [string, number]) => {
             let startIdx = joinedInput.lastIndexOf(
                 config.lineSeparator,
-                v - k.length - 11
+                Math.max(0, v - k.length - 11)
             ); // 1 from \n, 9 from `function `, 1 extra to compensate
-            let prevStartIdx = startIdx + 1;
+            let prevStartIdx = startIdx;
             while (joinedInput.charAt(prevStartIdx) !== config.lineSeparator)
                 prevStartIdx++;
             let endIdx = v;
@@ -94,5 +96,5 @@ export default function LintUnusedFunctions(
         });
     }
 
-    return joinedInput;
+    return joinedInput.trim();
 }

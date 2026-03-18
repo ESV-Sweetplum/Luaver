@@ -6,6 +6,7 @@ import { getFilesRecursively } from './utils/getFilesRecursively';
 import * as path from 'path';
 import counters from './utils/getArbitraryCounter';
 import getAndTrimFile from './utils/getAndTrimFile';
+import getAbsolutePath from './utils/getAbsolutePath';
 
 const entryPoints = ['draw', 'awake'];
 
@@ -85,10 +86,12 @@ export default async function transpile() {
     output = `PLUGIN_NAME="${luaverConfig.pluginName}";PLUGIN_VERSION="${luaverConfig.pluginVersion}";PLUGIN_AUTHOR="${luaverConfig.pluginAuthor}";PLUGIN_DESCRIPTION="${luaverConfig.pluginDescription}"${luaverConfig.lineSeparator}${output}`;
     if (luaverConfig.disableVectorPacking)
         output = `imgui_disable_vector_packing=true${luaverConfig.lineSeparator}${output}`;
+    if (!luaverConfig.dontRandomizeSeed)
+        output = `math.randomseed(os.time())${luaverConfig.lineSeparator}${output}`;
 
     if (fs.existsSync(getAbsolutePath('plugin.lua')))
         fs.rmSync(getAbsolutePath('plugin.lua'));
-    fs.writeFileSync(path.join(getAbsolutePath('plugin.lua')), output);
+    fs.writeFileSync(getAbsolutePath('plugin.lua'), output);
     if (fs.existsSync('quinsight/intellisense.lua'))
         fs.copyFileSync(
             'quinsight/intellisense.lua',
@@ -96,9 +99,4 @@ export default async function transpile() {
         );
 
     return paths.length;
-}
-
-function getAbsolutePath(relPath: string) {
-    // Initial .. is added to escape dist folder into Luaver root.
-    return path.join(__dirname, '..', luaverConfig.outDir, relPath);
 }

@@ -1,4 +1,5 @@
-PLUGIN_NAME="";PLUGIN_VERSION="";PLUGIN_AUTHOR="";PLUGIN_DESCRIPTION=""
+math.randomseed(os.time())
+PLUGIN_NAME="LuaverTest";PLUGIN_VERSION="1.0.0";PLUGIN_AUTHOR="plummyyummy";PLUGIN_DESCRIPTION="Nothing Special"
 
 function awake()
 
@@ -8,8 +9,10 @@ function hi()
     print("hi")
     print("hi2")
 end
+
 hi()
 math.sw()
+
 function math.sw()
     print("hi")
     print("hi2")

@@ -3,6 +3,9 @@ import chalk from 'chalk';
 import { performance } from 'perf_hooks';
 import luaverConfig, { reobtainConfig } from './utils/getConfig';
 import transpile from '.';
+import * as fs from 'fs';
+import getAbsolutePath from './utils/getAbsolutePath';
+import * as path from 'path';
 
 console.log(
     chalk.blueBright(
@@ -56,3 +59,15 @@ async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
 }
 
 transpile();
+
+const settingsData = `
+[Settings]
+Name = ${luaverConfig.includeVersionInPluginName ? luaverConfig.pluginName + ' v' + luaverConfig.pluginVersion : luaverConfig.pluginName}
+Author = ${luaverConfig.pluginAuthor}
+Description = ${luaverConfig.pluginDescription}
+`;
+
+if (fs.existsSync(getAbsolutePath('settings.ini')))
+    fs.rmSync(getAbsolutePath('settings.ini'));
+
+fs.writeFileSync(getAbsolutePath('settings.ini'), settingsData);

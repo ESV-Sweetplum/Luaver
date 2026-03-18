@@ -10,6 +10,9 @@ export default async function getProcessors(): Promise<LuaProcessor[]> {
         const processor: LuaProcessor = await import(
             path.join(__dirname, '../..', processorPath)
         );
+        processor.context = processorPath.includes('.plugin.')
+            ? 'plugin'
+            : 'file';
         processors.push(processor);
     }
 

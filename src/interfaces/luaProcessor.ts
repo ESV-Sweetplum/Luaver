@@ -6,6 +6,7 @@ interface LuaProcessor {
         file: T,
         config: LuaverConfig
     ) => T;
+    context: 'file' | 'plugin';
 }
 
 export default LuaProcessor;

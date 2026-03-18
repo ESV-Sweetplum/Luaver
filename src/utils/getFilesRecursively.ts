@@ -3,6 +3,7 @@ import * as path from 'path';
 
 export function getFilesRecursively(dir: string) {
     let files: string[] = [];
+    if (!fs.existsSync(dir)) return [];
 
     const filesInDirectory = fs.readdirSync(dir);
     for (const file of filesInDirectory) {

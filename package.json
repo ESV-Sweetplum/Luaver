@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "tsc && node dist"
+        "dev": "tsc && node dist/watch",
+        "watch": "npm run dev"
     },
     "repository": {
         "type": "git",
@@ -22,6 +23,8 @@
         "@types/ahocorasick": "^1.0.0",
         "@types/node": "^25.0.10",
         "ahocorasick": "^1.0.2",
+        "chalk": "^5.6.2",
+        "chokidar": "^4.0.3",
         "json5": "^2.2.3",
         "luaparse": "^0.3.1"
     },

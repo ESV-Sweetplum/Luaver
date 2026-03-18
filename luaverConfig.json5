@@ -1,6 +1,12 @@
 {
-    sources: ["/plugin"],
+    pluginName: "",
+    pluginVersion: "",
+    pluginAuthor: "",
+    pluginDescription: "",
+    includeVersionInPluginName: true,
+    sources: ["plugin", "packages"],
+    outDir: "/",
     lineSeparator: "\n",
-    disableVectorPacking: true,
+    disableVectorPacking: false,
     dontRandomizeSeed: false,
 }

@@ -112,11 +112,12 @@ export default async function transpile() {
     if (fs.existsSync(getAbsolutePath('plugin.lua')))
         fs.rmSync(getAbsolutePath('plugin.lua'));
     fs.writeFileSync(getAbsolutePath('plugin.lua'), output);
-    if (fs.existsSync('quinsight/intellisense.lua'))
-        fs.copyFileSync(
-            'quinsight/intellisense.lua',
-            getAbsolutePath('intellisense.lua')
-        );
+
+    const intellisensePath = luaverConfig.disableVectorPacking
+        ? 'quinsight/intellisense.lua'
+        : 'quinsight/intellisensePacked.lua';
+    if (fs.existsSync(intellisensePath))
+        fs.copyFileSync(intellisensePath, getAbsolutePath('intellisense.lua'));
 
     return paths.length;
 }

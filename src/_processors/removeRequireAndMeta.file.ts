@@ -9,4 +9,6 @@ export default function removeRequireAndMeta(
         .join(config.lineSeparator);
 
     output = output.replaceAll(/---@meta [a-zA-Z0-9\-]+\n/g, '');
+
+    return output
 }

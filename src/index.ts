@@ -24,13 +24,12 @@ export default async function transpile() {
     const processors = await getProcessors();
     const paths = luaverConfig.sources
         .map((source: string) =>
-            getFilesRecursively(path.join(__dirname, '..', source))
+            getFilesRecursively(path.join(__dirname, '..', source)).sort(
+                (a: string, b: string) =>
+                    +b.includes('.priority.') - +a.includes('.priority.')
+            )
         )
-        .flat()
-        .sort(
-            (a: string, b: string) =>
-                +b.includes('.priority.') - +a.includes('.priority.')
-        );
+        .flat();
 
     const [nonEntryPaths, entryPaths] = paths.reduce(
         ([a1, a2], path: string) => {

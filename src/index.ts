@@ -12,6 +12,11 @@ import getAbsolutePath from './utils/getAbsolutePath';
 const entryPoints = ['draw', 'awake'];
 
 export default async function transpile() {
+    let cancellation = {
+        execute: false,
+        reason: ''
+    };
+
     Object.keys(counters).forEach((key) => {
         counters[key] = 0;
     }); // Resets all counters to prevent strange file inconsistencies
@@ -41,21 +46,14 @@ export default async function transpile() {
     );
 
     if (entryPaths.length < entryPoints.length) {
-        console.log(
-            chalk.bgRedBright('LUAVER ERROR') +
-                chalk.red(
-                    ': You are missing one or more entry points. Please either add existing folders containing said entry points to your Luaver sources list, or create an entry point within an existing source.'
-                )
+        printLuaverError(
+            `You are missing one or more entry points. Please either add existing folders containing said entry points to your Luaver sources list, or create an entry point within an existing source.\n\nMissing: ${entryPoints
+                .filter((pt) => !entryPaths.some((f) => f.includes(pt)))
+                .map((n) => `_${n}.lua`)
+                .join(', ')}`
         );
-        console.log(
-            chalk.redBright(
-                `\nMissing: ${entryPoints
-                    .filter((pt) => !entryPaths.some((f) => f.includes(pt)))
-                    .map((n) => `_${n}.lua`)
-                    .join(', ')}`
-            )
-        );
-        process.exit(1);
+
+        return -1;
     }
 
     const fileProcessors = processors.filter(
@@ -79,6 +77,20 @@ export default async function transpile() {
             obj[key] = Array.isArray(fileData)
                 ? fileData
                 : fileData.split(luaverConfig.lineSeparator);
+
+            const fnDefLine = obj[key].findIndex((line) =>
+                line.includes(`function ${key}()`)
+            );
+            if (fnDefLine !== -1) {
+                obj[key].splice(fnDefLine);
+                const lastEndLine = obj[key].findLastIndex((line) =>
+                    /\s*end\s*/.test(line)
+                );
+                if (lastEndLine === -1) {
+                    cancellation.execute = true;
+                    cancellation.reason = `Could not find a corresponding "end" to remove from the ${key} entry point. Consider removing the "${key}" function definition and having Luaver handle it automatically.`;
+                }
+            }
             return obj;
         },
         {}
@@ -109,6 +121,11 @@ export default async function transpile() {
     if (!luaverConfig.dontRandomizeSeed)
         output = `math.randomseed(os.time())${luaverConfig.lineSeparator}${output}`;
 
+    if (cancellation.execute) {
+        printLuaverError(cancellation.reason);
+        return -1;
+    }
+
     if (fs.existsSync(getAbsolutePath('plugin.lua')))
         fs.rmSync(getAbsolutePath('plugin.lua'));
     fs.writeFileSync(getAbsolutePath('plugin.lua'), output);
@@ -120,4 +137,16 @@ export default async function transpile() {
         fs.copyFileSync(intellisensePath, getAbsolutePath('intellisense.lua'));
 
     return paths.length;
+}
+
+export async function printLuaverError(msg: string) {
+    renderBigLine(1);
+    console.error(chalk.bgRedBright('LUAVER ERROR') + chalk.red(' ' + msg));
+    renderBigLine(2);
+}
+
+export function renderBigLine(type: 0 | 1 | 2) {
+    if (type === 1) console.log();
+    console.log('─'.repeat(process.stdout.columns));
+    if (type === 2) console.log();
 }

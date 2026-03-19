@@ -43,6 +43,7 @@ async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
 
     const fileCount = await transpile();
     const endTime = performance.now();
+    if (fileCount === -1) return;
     console.log(
         `Successfully transpiled ${chalk.green(fileCount)} files in ${chalk.green(
             `${Math.round((endTime - startTime) * 1000) / 1000}ms`
@@ -50,7 +51,8 @@ async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
     );
 }
 
-transpile().then(() => {
+transpile().then((ct) => {
+    if (ct === -1) return;
     console.log(
         chalk.blueBright(
             chalk.bold(

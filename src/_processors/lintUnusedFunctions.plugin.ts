@@ -57,7 +57,8 @@ export default function LintUnusedFunctions(
                 config.lineSeparator,
                 Math.max(0, v - k.length - 11)
             ); // 1 from \n, 9 from `function `, 1 extra to compensate
-            let prevStartIdx = startIdx;
+            let prevStartIdx = startIdx + 1;
+            if (startIdx === 0) prevStartIdx = 0;
             while (joinedInput.charAt(prevStartIdx) !== config.lineSeparator)
                 prevStartIdx++;
             let endIdx = v;

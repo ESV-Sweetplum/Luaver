@@ -12,7 +12,9 @@ import TranspilerOptions from './interfaces/transpilerOptions';
 
 const entryPoints = ['draw', 'awake'];
 
-export default async function transpile(options?: TranspilerOptions) {
+export default async function transpile(
+    options: Partial<TranspilerOptions> = {}
+) {
     let cancellation = {
         execute: false,
         reason: ''

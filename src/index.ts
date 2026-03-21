@@ -117,7 +117,7 @@ export default async function transpile(
     output = processLuaFile(output, pluginProcessors);
     if (Array.isArray(output)) output = output.join(luaverConfig.lineSeparator);
 
-    output = `PLUGIN_NAME="${luaverConfig.pluginName}";PLUGIN_VERSION="${luaverConfig.pluginVersion}";PLUGIN_AUTHOR="${luaverConfig.pluginAuthor}";PLUGIN_DESCRIPTION="${luaverConfig.pluginDescription}"${luaverConfig.lineSeparator}ENVIRONMENT=${options.environment ?? 'development'};DISTRO=${options.distro ?? 'development'}${luaverConfig.lineSeparator}${output}`;
+    output = `PLUGIN_NAME="${luaverConfig.pluginName}";PLUGIN_VERSION="${luaverConfig.pluginVersion}";PLUGIN_AUTHOR="${luaverConfig.pluginAuthor}";PLUGIN_DESCRIPTION="${luaverConfig.pluginDescription}"${luaverConfig.lineSeparator}ENVIRONMENT="${options.environment ?? 'development'}";DISTRO="${options.distro ?? 'development'}"${luaverConfig.lineSeparator}${output}`;
     if (luaverConfig.disableVectorPacking)
         output = `imgui_disable_vector_packing=true${luaverConfig.lineSeparator}${output}`;
     if (!luaverConfig.dontRandomizeSeed)

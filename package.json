@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "dev": "tsc && node dist/watch",
-        "watch": "npm run dev"
+        "watch": "npm run dev",
+        "build": "tsc && node dist/build"
     },
     "repository": {
         "type": "git",
@@ -22,6 +23,7 @@
     "dependencies": {
         "@types/ahocorasick": "^1.0.0",
         "@types/node": "^25.0.10",
+        "adm-zip": "^0.5.16",
         "ahocorasick": "^1.0.2",
         "chalk": "^5.6.2",
         "chokidar": "^4.0.3",

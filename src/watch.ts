@@ -6,6 +6,7 @@ import transpile from '.';
 import * as fs from 'fs';
 import getAbsolutePath from './utils/getAbsolutePath';
 import * as path from 'path';
+import writeSettingsIni from './utils/writeSettingsIni';
 
 const debounce = (fn: Function, ms = 300) => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -20,17 +21,17 @@ chokidar.watch(luaverConfig.sources, { ignoreInitial: true }).on(
     debounce(
         (event: keyof chokidar.FSWatcherEventMap, path: string) =>
             main(event, path),
-        100
-    )
+        100,
+    ),
 );
 
 chokidar
     .watch('./luaverConfig.json5', { ignoreInitial: true })
-    .on('change', (e) => {
+    .on('change', e => {
         console.log(
             chalk.bgRedBright(
-                `\nChange detected on LuaverConfig. Please restart the watcher to apply these changes.`
-            )
+                `\nChange detected on LuaverConfig. Please restart the watcher to apply these changes.`,
+            ),
         );
         reobtainConfig();
     });
@@ -38,7 +39,7 @@ chokidar
 async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
     const startTime = performance.now();
     console.log(
-        `\nEvent ${chalk.red(event)} detected on file ${chalk.red(path)}. Now retranspiling...`
+        `\nEvent ${chalk.red(event)} detected on file ${chalk.red(path)}. Now retranspiling...`,
     );
 
     const fileCount = await transpile();
@@ -46,30 +47,20 @@ async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
     if (fileCount === -1) return;
     console.log(
         `Successfully transpiled ${chalk.green(fileCount)} files in ${chalk.green(
-            `${Math.round((endTime - startTime) * 1000) / 1000}ms`
-        )}.\n`
+            `${Math.round((endTime - startTime) * 1000) / 1000}ms`,
+        )}.\n`,
     );
 }
 
-transpile().then((ct) => {
+transpile().then(ct => {
     if (ct === -1) return;
     console.log(
         chalk.blueBright(
             chalk.bold(
-                'Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.'
-            )
-        )
+                'Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.',
+            ),
+        ),
     );
 });
 
-const settingsData = `
-[Settings]
-Name = ${luaverConfig.includeVersionInPluginName ? luaverConfig.pluginName + ' v' + luaverConfig.pluginVersion : luaverConfig.pluginName}
-Author = ${luaverConfig.pluginAuthor}
-Description = ${luaverConfig.pluginDescription}
-`;
-
-if (fs.existsSync(getAbsolutePath('settings.ini')))
-    fs.rmSync(getAbsolutePath('settings.ini'));
-
-fs.writeFileSync(getAbsolutePath('settings.ini'), settingsData);
+writeSettingsIni();

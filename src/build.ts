@@ -80,7 +80,6 @@ export default async function build() {
         const tempGithubPath = getAbsolutePath('temp-build-github');
         const tempSteamPath = getAbsolutePath('temp-build-steam');
         const settingsIniPath = getAbsolutePath('settings.ini');
-        const workshopPath = getAbsolutePath(luaverConfig.workshopFolder);
         if (!fs.existsSync(tempGithubPath)) fs.mkdirSync(tempGithubPath);
         if (!fs.existsSync(tempSteamPath)) fs.mkdirSync(tempSteamPath);
         fs.mkdirSync(path.join(tempGithubPath, packageName));
@@ -111,30 +110,44 @@ export default async function build() {
             ),
         );
 
-        if (fs.existsSync(workshopPath)) {
-            if (
-                fs.existsSync(path.join(workshopPath, 'steam_workshop_id.txt'))
-            ) {
-                fs.copyFileSync(
-                    path.join(workshopPath, 'steam_workshop_id.txt'),
-                    path.join(
-                        tempSteamPath,
-                        packageName,
-                        'steam_workshop_id.txt',
-                    ),
-                );
-            }
-            if (
-                fs.existsSync(
-                    path.join(workshopPath, 'steam_workshop_preview.png'),
-                )
-            ) {
-                fs.copyFileSync(
-                    path.join(workshopPath, 'steam_workshop_preview.png'),
-                    path.join(
-                        tempSteamPath,
-                        packageName,
-                        'steam_workshop_preview.png',
+        if (luaverConfig.workshopFolder) {
+            const workshopPath = getAbsolutePath(luaverConfig.workshopFolder);
+
+            if (fs.existsSync(workshopPath)) {
+                if (
+                    fs.existsSync(
+                        path.join(workshopPath, 'steam_workshop_id.txt'),
+                    )
+                ) {
+                    fs.copyFileSync(
+                        path.join(workshopPath, 'steam_workshop_id.txt'),
+                        path.join(
+                            tempSteamPath,
+                            packageName,
+                            'steam_workshop_id.txt',
+                        ),
+                    );
+                }
+                if (
+                    fs.existsSync(
+                        path.join(workshopPath, 'steam_workshop_preview.png'),
+                    )
+                ) {
+                    fs.copyFileSync(
+                        path.join(workshopPath, 'steam_workshop_preview.png'),
+                        path.join(
+                            tempSteamPath,
+                            packageName,
+                            'steam_workshop_preview.png',
+                        ),
+                    );
+                }
+            } else {
+                console.log(
+                    chalk.blueBright(
+                        chalk.bold(
+                            `The listed workshop folder ${chalk.redBright(luaverConfig.workshopFolder)} does not exist.`,
+                        ),
                     ),
                 );
             }
@@ -142,7 +155,7 @@ export default async function build() {
             console.log(
                 chalk.blueBright(
                     chalk.bold(
-                        `No workshop data was listed in ${chalk.redBright('luaverConfig.json5')}. The steam output folder will be equivalent to the unzipped GitHub folder.`,
+                        `No workshop folder was listed in ${chalk.redBright('luaverConfig.json5')}. The steam output folder will be equivalent to the unzipped GitHub folder.`,
                     ),
                 ),
             );

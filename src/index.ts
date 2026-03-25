@@ -13,14 +13,14 @@ import TranspilerOptions from './interfaces/transpilerOptions';
 const entryPoints = ['draw', 'awake'];
 
 export default async function transpile(
-    options: Partial<TranspilerOptions> = {}
+    options: Partial<TranspilerOptions> = {},
 ) {
     let cancellation = {
         execute: false,
-        reason: ''
+        reason: '',
     };
 
-    Object.keys(counters).forEach((key) => {
+    Object.keys(counters).forEach(key => {
         counters[key] = 0;
     }); // Resets all counters to prevent strange file inconsistencies
 
@@ -29,64 +29,65 @@ export default async function transpile(
         .map((source: string) =>
             getFilesRecursively(path.join(__dirname, '..', source)).sort(
                 (a: string, b: string) =>
-                    +b.includes('.priority.') - +a.includes('.priority.')
-            )
+                    +b.includes('.priority.') - +a.includes('.priority.'),
+            ),
         )
-        .flat();
+        .flat()
+        .filter((f: string) => f.endsWith('.lua'));
 
     const [nonEntryPaths, entryPaths] = paths.reduce(
         ([a1, a2], path: string) => {
             (entryPoints.some(
-                (e) => path.includes(`.${e}.`) || path.includes(`_${e}`)
+                e => path.includes(`.${e}.`) || path.includes(`_${e}`),
             )
                 ? a2
                 : a1
             ).push(path);
             return [a1, a2];
         },
-        [[], []]
+        [[], []],
     );
 
     if (entryPaths.length < entryPoints.length) {
         printLuaverError(
             `You are missing one or more entry points. Please either add existing folders containing said entry points to your Luaver sources list, or create an entry point within an existing source.\n\nMissing: ${entryPoints
-                .filter((pt) => !entryPaths.some((f) => f.includes(pt)))
-                .map((n) => `_${n}.lua`)
-                .join(', ')}`
+                .filter(pt => !entryPaths.some(f => f.includes(pt)))
+                .map(n => `_${n}.lua`)
+                .join(', ')}`,
         );
 
         return -1;
     }
 
     const fileProcessors = processors.filter(
-        (processor) => processor.context === 'file'
+        processor => processor.context === 'file',
     );
     const pluginProcessors = processors.filter(
-        (processor) => processor.context === 'plugin'
+        processor => processor.context === 'plugin',
     );
     const fileData = nonEntryPaths.map((path: string) =>
-        processLuaFile(getAndTrimFile(path), fileProcessors)
+        processLuaFile(getAndTrimFile(path), fileProcessors),
     );
 
     const entryFileData: Record<string, string[]> = entryPaths.reduce(
         (obj: Record<string, string[]>, path: string) => {
-            if (!entryPoints.some((e) => path.includes(`_${e}`))) return obj;
+            if (!entryPoints.some(e => path.includes(`_${e}`))) return obj;
             const key = path.split('_')[1].split('.lua')[0];
             const fileData = processLuaFile(
                 getAndTrimFile(path),
-                fileProcessors
+                fileProcessors,
             );
             obj[key] = Array.isArray(fileData)
                 ? fileData
                 : fileData.split(luaverConfig.lineSeparator);
 
-            const fnDefLine = obj[key].findIndex((line) =>
-                line.includes(`function ${key}()`)
+            const fnDefLine = obj[key].findIndex(line =>
+                line.includes(`function ${key}()`),
             );
             if (fnDefLine !== -1) {
                 obj[key].splice(fnDefLine);
-                const lastEndLine = obj[key].findLastIndex((line) =>
-                    /\s*end\s*/.test(line)
+                const lastEndLine = obj[key].findLastIndex(line =>
+                    /\s*end\s*/.test(line),
                 );
                 if (lastEndLine === -1) {
                     cancellation.execute = true;
@@ -95,16 +96,16 @@ export default async function transpile(
             }
             return obj;
         },
-        {}
+        {},
     );
 
     entryPaths.forEach((path: string) => {
-        if (entryPoints.some((e) => path.includes(`_${e}`))) return;
+        if (entryPoints.some(e => path.includes(`_${e}`))) return;
         const key = path.split('.lua')[0].split('.').at(-1);
         const fileData = processLuaFile(getAndTrimFile(path), fileProcessors);
 
         entryFileData[key].push(
-            ...(Array.isArray(fileData) ? fileData : fileData.split('\n'))
+            ...(Array.isArray(fileData) ? fileData : fileData.split('\n')),
         );
     });
 

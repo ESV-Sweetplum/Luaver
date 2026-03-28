@@ -1,10 +1,10 @@
 import LuaverConfig from '../interfaces/luaverConfig';
-import * as acBuilder from 'ahocorasick';
+import acBuilder from 'ahocorasick';
 import getFunctionList from '../utils/getFunctionList';
 
 export default function LintUnusedFunctions(
     input: string[],
-    config: LuaverConfig
+    config: LuaverConfig,
 ) {
     const separatorLength = config.lineSeparator.length;
 
@@ -17,14 +17,14 @@ export default function LintUnusedFunctions(
         linted = true;
 
         let functions = getFunctionList(input).filter(
-            (name) =>
+            name =>
                 !name.startsWith('string') &&
                 !name.startsWith('table') &&
-                !['awake', 'draw'].includes(name)
+                !['awake', 'draw'].includes(name),
         );
 
         const ac = new acBuilder(
-            functions.map((fn) => [`${fn}(`, `${fn},`, `${fn})`]).flat()
+            functions.map(fn => [`${fn}(`, `${fn},`, `${fn})`]).flat(),
         );
         const acResult = ac.search(joinedInput).reduce((obj, arr) => {
             const target = arr[1][0].replaceAll(/[\(,\)]/g, '');
@@ -55,7 +55,7 @@ export default function LintUnusedFunctions(
         finalEntries.reverse().forEach(([k, v]: [string, number]) => {
             let startIdx = joinedInput.lastIndexOf(
                 config.lineSeparator,
-                Math.max(0, v - k.length - 11)
+                Math.max(0, v - k.length - 11),
             ); // 1 from \n, 9 from `function `, 1 extra to compensate
             let prevStartIdx = startIdx + 1;
             if (startIdx === 0) prevStartIdx = 0;
@@ -68,14 +68,14 @@ export default function LintUnusedFunctions(
                 if (
                     joinedInput.slice(
                         startIdx + separatorLength,
-                        startIdx + separatorLength + 3
+                        startIdx + separatorLength + 3,
                     ) !== '---'
                 )
                     break;
                 prevStartIdx = startIdx;
                 startIdx = joinedInput.lastIndexOf(
                     config.lineSeparator,
-                    startIdx - 1
+                    startIdx - 1,
                 );
             }
 
@@ -83,7 +83,7 @@ export default function LintUnusedFunctions(
                 if (
                     joinedInput.slice(
                         endIdx + separatorLength,
-                        endIdx + separatorLength + 3
+                        endIdx + separatorLength + 3,
                     ) === 'end'
                 )
                     endFound = true;
@@ -92,7 +92,7 @@ export default function LintUnusedFunctions(
 
             joinedInput = joinedInput.replace(
                 joinedInput.slice(prevStartIdx, endIdx),
-                ''
+                '',
             );
         });
     }

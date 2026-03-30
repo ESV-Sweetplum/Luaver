@@ -2,6 +2,7 @@
 ---@param port integer
 ---@param data string
 function ipc.emit(port, data)
-    if (port <= 0) then port = -port end
-    local bm = utils.CreateBookmark(math.floor(-port * 67 - 6969), data)
+    local bm = utils.CreateBookmark(ipc.transform(port), data)
+    actions.AddBookmark(bm)
+    table.insert(ipc.emittedPorts, port)
 end

@@ -101,7 +101,8 @@ export default async function transpile(
 
     entryPaths.forEach((path: string) => {
         if (entryPoints.some(e => path.includes(`_${e}`))) return;
-        const key = path.split('.lua')[0].split('.').at(-1) as string;
+        const terms = path.split('.lua')[0].split('.');
+        const key = terms.at(-1) as string;
         const fileData = processLuaFile(getAndTrimFile(path), fileProcessors);
         const insertionInfo = Array.isArray(fileData)
             ? fileData

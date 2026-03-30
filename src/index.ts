@@ -36,7 +36,7 @@ export default async function transpile(
         .filter((f: string) => f.endsWith('.lua'));
 
     const [nonEntryPaths, entryPaths] = paths.reduce(
-        ([a1, a2], path: string) => {
+        ([a1, a2]: [string[], string[]], path) => {
             (entryPoints.some(
                 e => path.includes(`.${e}.`) || path.includes(`_${e}`),
             )
@@ -101,7 +101,7 @@ export default async function transpile(
 
     entryPaths.forEach((path: string) => {
         if (entryPoints.some(e => path.includes(`_${e}`))) return;
-        const key = path.split('.lua')[0].split('.').at(-1);
+        const key = path.split('.lua')[0].split('.').at(-1) as string;
         const fileData = processLuaFile(getAndTrimFile(path), fileProcessors);
 
         entryFileData[key].push(
@@ -109,7 +109,7 @@ export default async function transpile(
         );
     });
 
-    let output = fileData.join(luaverConfig.lineSeparator);
+    let output: string | string[] = fileData.join(luaverConfig.lineSeparator);
 
     Object.entries(entryFileData).forEach(([entry, fileData]) => {
         output = `${output}${luaverConfig.lineSeparator}function ${entry}()${luaverConfig.lineSeparator}${fileData.join(luaverConfig.lineSeparator)}${luaverConfig.lineSeparator}end`;

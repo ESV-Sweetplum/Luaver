@@ -26,25 +26,31 @@ export default function LintUnusedFunctions(
         const ac = new acBuilder(
             functions.map(fn => [`${fn}(`, `${fn},`, `${fn})`]).flat(),
         );
-        const acResult = ac.search(joinedInput).reduce((obj, arr) => {
-            const target = arr[1][0].replaceAll(/[\(,\)]/g, '');
-            if (obj[target]) {
-                obj[target].push(arr[0]);
-            } else {
-                obj[target] = [arr[0]];
-            }
-            return obj;
-        }, {});
+        const acResult = ac
+            .search(joinedInput)
+            .reduce((obj: Record<string, number[]>, arr) => {
+                const target = arr[1][0].replaceAll(/[\(,\)]/g, '');
+                if (obj[target]) {
+                    obj[target].push(arr[0]);
+                } else {
+                    obj[target] = [arr[0]];
+                }
+                return obj;
+            }, {});
 
-        Object.entries(acResult).forEach(([k, v]: [string, number[]]) => {
-            if (v.length > 1) {
-                delete acResult[k];
-            } else {
-                acResult[k] = v[0];
-            }
-        });
+        const realAcResult = Object.entries(acResult).reduce(
+            (obj: Record<string, number>, [k, v]: [string, number[]]) => {
+                if (v.length > 1) {
+                    return obj;
+                } else {
+                    obj[k] = v[0];
+                    return obj;
+                }
+            },
+            {},
+        );
 
-        const finalEntries = Object.entries(acResult);
+        const finalEntries = Object.entries(realAcResult);
 
         if (finalEntries.length) {
             linted = false;

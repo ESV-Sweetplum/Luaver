@@ -5,11 +5,9 @@ import LuaverConfig from '../interfaces/luaverConfig';
 let luaverConfig: LuaverConfig;
 
 export function reobtainConfig() {
-    luaverConfig = json5.parse(
-        fs.readFileSync('./luaverConfig.json5', 'utf-8')
-    );
+    return json5.parse(fs.readFileSync('./luaverConfig.json5', 'utf-8'));
 }
 
-reobtainConfig();
+luaverConfig = reobtainConfig();
 
 export default luaverConfig;

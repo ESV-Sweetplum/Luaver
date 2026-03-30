@@ -103,10 +103,15 @@ export default async function transpile(
         if (entryPoints.some(e => path.includes(`_${e}`))) return;
         const key = path.split('.lua')[0].split('.').at(-1) as string;
         const fileData = processLuaFile(getAndTrimFile(path), fileProcessors);
+        const insertionInfo = Array.isArray(fileData)
+            ? fileData
+            : fileData.split('\n');
 
-        entryFileData[key].push(
-            ...(Array.isArray(fileData) ? fileData : fileData.split('\n')),
-        );
+        if (path.includes('.precurse.')) {
+            entryFileData[key].unshift(...insertionInfo);
+        } else {
+            entryFileData[key].push(...insertionInfo);
+        }
     });
 
     let output: string | string[] = fileData.join(luaverConfig.lineSeparator);

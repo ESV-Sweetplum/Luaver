@@ -1,7 +1,7 @@
 import * as chokidar from 'chokidar';
 import chalk from 'chalk';
 import { performance } from 'perf_hooks';
-import luaverConfig, { reobtainConfig } from './utils/getConfig';
+import luaverConfig, { reloadConfig } from './utils/getConfig';
 import transpile from '.';
 import * as fs from 'fs';
 import getAbsolutePath from './utils/getAbsolutePath';
@@ -33,7 +33,7 @@ chokidar
                 `\nChange detected on LuaverConfig. Please restart the watcher to apply these changes.`,
             ),
         );
-        reobtainConfig();
+        reloadConfig();
     });
 
 async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {

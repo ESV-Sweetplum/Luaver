@@ -26,7 +26,7 @@ chokidar.watch(luaverConfig.sources, { ignoreInitial: true }).on(
 );
 
 chokidar
-    .watch('./luaverConfig.json5', { ignoreInitial: true })
+    .watch('luaverConfig.json5', { ignoreInitial: true })
     .on('change', e => {
         console.log(
             chalk.bgRedBright(

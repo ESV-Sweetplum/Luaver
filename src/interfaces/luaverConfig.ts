@@ -13,10 +13,7 @@ export default interface LuaverConfig {
     workshopFolder: string; // The folder which should contain your steam workshop data.
 }
 
-export const LuaverConfigSchema: Record<
-    string,
-    'string' | 'boolean' | 'number' | 'string[]'
-> = {
+export const LuaverConfigSchema: Record<string, 'string' | 'boolean' | 'number' | 'string[]'> = {
     pluginName: 'string',
     pluginVersion: 'string',
     pluginAuthor: 'string',

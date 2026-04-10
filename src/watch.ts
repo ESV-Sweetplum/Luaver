@@ -18,29 +18,19 @@ const debounce = (fn: Function, ms = 300) => {
 
 chokidar.watch(luaverConfig.sources, { ignoreInitial: true }).on(
     'all',
-    debounce(
-        (event: keyof chokidar.FSWatcherEventMap, path: string) =>
-            main(event, path),
-        100,
-    ),
+    debounce((event: keyof chokidar.FSWatcherEventMap, path: string) => main(event, path), 100),
 );
 
-chokidar
-    .watch('luaverConfig.json5', { ignoreInitial: true })
-    .on('change', e => {
-        console.log(
-            chalk.bgRedBright(
-                `\nChange detected on LuaverConfig. Please restart the watcher to apply these changes.`,
-            ),
-        );
-        reloadConfig();
-    });
+chokidar.watch('luaverConfig.json5', { ignoreInitial: true }).on('change', e => {
+    console.log(
+        chalk.bgRedBright(`\nChange detected on LuaverConfig. Please restart the watcher to apply these changes.`),
+    );
+    reloadConfig();
+});
 
 async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
     const startTime = performance.now();
-    console.log(
-        `\nEvent ${chalk.red(event)} detected on file ${chalk.red(path)}. Now retranspiling...`,
-    );
+    console.log(`\nEvent ${chalk.red(event)} detected on file ${chalk.red(path)}. Now retranspiling...`);
 
     const fileCount = await transpile();
     const endTime = performance.now();
@@ -56,9 +46,7 @@ transpile().then(ct => {
     if (ct === -1) return;
     console.log(
         chalk.blueBright(
-            chalk.bold(
-                'Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.',
-            ),
+            chalk.bold('Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.'),
         ),
     );
 });

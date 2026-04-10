@@ -4,9 +4,7 @@ import * as path from 'path';
 import LuaverConfig from '../interfaces/luaverConfig';
 
 export function reloadConfig() {
-    const config: LuaverConfig = json5.parse(
-        fs.readFileSync('luaverConfig.json5', 'utf-8'),
-    );
+    const config: LuaverConfig = json5.parse(fs.readFileSync('luaverConfig.json5', 'utf-8'));
 
     if (path.basename(process.cwd()) === 'Luaver') {
         config.sources.unshift('embedded');

@@ -12,9 +12,7 @@ export default async function build() {
 
     console.log(
         chalk.blueBright(
-            chalk.bold(
-                `Transpiling ${chalk.redBright('plugin.lua')} in the ${chalk.redBright('GitHub')} context...`,
-            ),
+            chalk.bold(`Transpiling ${chalk.redBright('plugin.lua')} in the ${chalk.redBright('GitHub')} context...`),
         ),
     );
 
@@ -22,24 +20,13 @@ export default async function build() {
         distro: 'github',
         environment: 'production',
     });
-    const pluginGithub = fs.readFileSync(
-        getAbsolutePath('plugin.lua'),
-        'utf-8',
-    );
+    const pluginGithub = fs.readFileSync(getAbsolutePath('plugin.lua'), 'utf-8');
+
+    console.log(chalk.blueBright(chalk.bold(`Internally saved ${chalk.redBright('GitHub/plugin.lua')}.`)));
 
     console.log(
         chalk.blueBright(
-            chalk.bold(
-                `Internally saved ${chalk.redBright('GitHub/plugin.lua')}.`,
-            ),
-        ),
-    );
-
-    console.log(
-        chalk.blueBright(
-            chalk.bold(
-                `Transpiling ${chalk.redBright('plugin.lua')} in the ${chalk.redBright('Steam')} context...`,
-            ),
+            chalk.bold(`Transpiling ${chalk.redBright('plugin.lua')} in the ${chalk.redBright('Steam')} context...`),
         ),
     );
 
@@ -49,30 +36,14 @@ export default async function build() {
     });
     const pluginSteam = fs.readFileSync(getAbsolutePath('plugin.lua'), 'utf-8');
 
-    console.log(
-        chalk.blueBright(
-            chalk.bold(
-                `Internally saved ${chalk.redBright('Steam/plugin.lua')}.`,
-            ),
-        ),
-    );
+    console.log(chalk.blueBright(chalk.bold(`Internally saved ${chalk.redBright('Steam/plugin.lua')}.`)));
 
-    console.log(
-        chalk.blueBright(
-            chalk.bold(`Recompiling ${chalk.redBright('settings.ini')}...`),
-        ),
-    );
+    console.log(chalk.blueBright(chalk.bold(`Recompiling ${chalk.redBright('settings.ini')}...`)));
 
     writeSettingsIni(luaverConfig.buildVersionInPluginName);
 
     const packageName = `${luaverConfig.pluginName}-${luaverConfig.pluginVersion}`;
-    console.log(
-        chalk.blueBright(
-            chalk.bold(
-                `Zipping into ${chalk.redBright(`builds/${packageName}`)}...`,
-            ),
-        ),
-    );
+    console.log(chalk.blueBright(chalk.bold(`Zipping into ${chalk.redBright(`builds/${packageName}`)}...`)));
 
     const zip = new AdmZip();
     try {
@@ -85,22 +56,10 @@ export default async function build() {
         fs.mkdirSync(path.join(tempGithubPath, packageName));
         fs.mkdirSync(path.join(tempSteamPath, packageName));
 
-        fs.writeFileSync(
-            path.join(tempGithubPath, packageName, 'plugin.lua'),
-            pluginGithub,
-        );
-        fs.writeFileSync(
-            path.join(tempSteamPath, packageName, 'plugin.lua'),
-            pluginSteam,
-        );
-        fs.copyFileSync(
-            settingsIniPath,
-            path.join(tempGithubPath, packageName, 'settings.ini'),
-        );
-        fs.copyFileSync(
-            settingsIniPath,
-            path.join(tempSteamPath, packageName, 'settings.ini'),
-        );
+        fs.writeFileSync(path.join(tempGithubPath, packageName, 'plugin.lua'), pluginGithub);
+        fs.writeFileSync(path.join(tempSteamPath, packageName, 'plugin.lua'), pluginSteam);
+        fs.copyFileSync(settingsIniPath, path.join(tempGithubPath, packageName, 'settings.ini'));
+        fs.copyFileSync(settingsIniPath, path.join(tempSteamPath, packageName, 'settings.ini'));
 
         console.log(
             chalk.blueBright(
@@ -114,32 +73,16 @@ export default async function build() {
             const workshopPath = getAbsolutePath(luaverConfig.workshopFolder);
 
             if (fs.existsSync(workshopPath)) {
-                if (
-                    fs.existsSync(
-                        path.join(workshopPath, 'steam_workshop_id.txt'),
-                    )
-                ) {
+                if (fs.existsSync(path.join(workshopPath, 'steam_workshop_id.txt'))) {
                     fs.copyFileSync(
                         path.join(workshopPath, 'steam_workshop_id.txt'),
-                        path.join(
-                            tempSteamPath,
-                            packageName,
-                            'steam_workshop_id.txt',
-                        ),
+                        path.join(tempSteamPath, packageName, 'steam_workshop_id.txt'),
                     );
                 }
-                if (
-                    fs.existsSync(
-                        path.join(workshopPath, 'steam_workshop_preview.png'),
-                    )
-                ) {
+                if (fs.existsSync(path.join(workshopPath, 'steam_workshop_preview.png'))) {
                     fs.copyFileSync(
                         path.join(workshopPath, 'steam_workshop_preview.png'),
-                        path.join(
-                            tempSteamPath,
-                            packageName,
-                            'steam_workshop_preview.png',
-                        ),
+                        path.join(tempSteamPath, packageName, 'steam_workshop_preview.png'),
                     );
                 }
             } else {
@@ -164,14 +107,10 @@ export default async function build() {
         zip.addLocalFolder(tempGithubPath);
         zip.writeZip(path.join(buildPath, `${packageName}.zip`));
 
-        fs.cpSync(
-            path.join(tempSteamPath, packageName),
-            path.join(buildPath, `${packageName}-steam`),
-            {
-                recursive: true,
-                force: true,
-            },
-        );
+        fs.cpSync(path.join(tempSteamPath, packageName), path.join(buildPath, `${packageName}-steam`), {
+            recursive: true,
+            force: true,
+        });
 
         console.log(
             chalk.greenBright(
@@ -186,11 +125,7 @@ export default async function build() {
         fs.rmSync('temp-build-github', { recursive: true, force: true });
         fs.rmSync('temp-build-steam', { recursive: true, force: true });
     } catch (e) {
-        console.log(
-            chalk.bgRedBright(
-                `An error occurred during the build process: ${e}`,
-            ),
-        );
+        console.log(chalk.bgRedBright(`An error occurred during the build process: ${e}`));
 
         fs.rmSync('temp-build-github', { recursive: true, force: true });
         fs.rmSync('temp-build-steam', { recursive: true, force: true });

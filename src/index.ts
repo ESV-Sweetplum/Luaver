@@ -13,9 +13,7 @@ import checkConfigValidity from './utils/checkConfigValidity';
 
 const entryPoints = ['draw', 'awake'];
 
-export default async function transpile(
-    options: Partial<TranspilerOptions> = {},
-) {
+export default async function transpile(options: Partial<TranspilerOptions> = {}) {
     const missingConfigParams = checkConfigValidity();
 
     if (missingConfigParams.length) {
@@ -39,23 +37,15 @@ export default async function transpile(
     const paths = luaverConfig.sources
         .map((source: string) =>
             getFilesRecursively(path.join(__dirname, '..', source)).sort(
-                (a: string, b: string) =>
-                    +b.includes('.priority.') - +a.includes('.priority.'),
+                (a: string, b: string) => +b.includes('.priority.') - +a.includes('.priority.'),
             ),
         )
         .flat()
-        .filter(
-            (f: string) => f.endsWith('.lua') && !f.includes('intellisense'),
-        );
+        .filter((f: string) => f.endsWith('.lua') && !f.includes('intellisense'));
 
     const [nonEntryPaths, entryPaths] = paths.reduce(
         ([a1, a2]: [string[], string[]], path) => {
-            (entryPoints.some(
-                e => path.includes(`.${e}.`) || path.includes(`_${e}`),
-            )
-                ? a2
-                : a1
-            ).push(path);
+            (entryPoints.some(e => path.includes(`.${e}.`) || path.includes(`_${e}`)) ? a2 : a1).push(path);
             return [a1, a2];
         },
         [[], []],
@@ -72,54 +62,34 @@ export default async function transpile(
         return -1;
     }
 
-    const fileProcessors = processors.filter(
-        processor => processor.context === 'file',
-    );
-    const pluginProcessors = processors.filter(
-        processor => processor.context === 'plugin',
-    );
-    const fileData = nonEntryPaths.map((path: string) =>
-        processLuaFile(getAndTrimFile(path), fileProcessors),
-    );
+    const fileProcessors = processors.filter(processor => processor.context === 'file');
+    const pluginProcessors = processors.filter(processor => processor.context === 'plugin');
+    const fileData = nonEntryPaths.map((path: string) => processLuaFile(getAndTrimFile(path), fileProcessors));
 
-    const entryFileData: Record<string, string[]> = entryPaths.reduce(
-        (obj: Record<string, string[]>, path: string) => {
-            if (!entryPoints.some(e => path.includes(`_${e}`))) return obj;
-            const key = path.split('_')[1].split('.lua')[0];
-            const fileData = processLuaFile(
-                getAndTrimFile(path),
-                fileProcessors,
-            );
-            obj[key] = Array.isArray(fileData)
-                ? fileData
-                : fileData.split(luaverConfig.lineSeparator);
+    const entryFileData: Record<string, string[]> = entryPaths.reduce((obj: Record<string, string[]>, path: string) => {
+        if (!entryPoints.some(e => path.includes(`_${e}`))) return obj;
+        const key = path.split('_')[1].split('.lua')[0];
+        const fileData = processLuaFile(getAndTrimFile(path), fileProcessors);
+        obj[key] = Array.isArray(fileData) ? fileData : fileData.split(luaverConfig.lineSeparator);
 
-            const fnDefLine = obj[key].findIndex(line =>
-                line.includes(`function ${key}()`),
-            );
-            if (fnDefLine !== -1) {
-                obj[key].splice(fnDefLine);
-                const lastEndLine = obj[key].findLastIndex(line =>
-                    /\s*end\s*/.test(line),
-                );
-                if (lastEndLine === -1) {
-                    cancellation.execute = true;
-                    cancellation.reason = `Could not find a corresponding "end" to remove from the ${key} entry point. Consider removing the "${key}" function definition and having Luaver handle it automatically.`;
-                }
+        const fnDefLine = obj[key].findIndex(line => line.includes(`function ${key}()`));
+        if (fnDefLine !== -1) {
+            obj[key].splice(fnDefLine);
+            const lastEndLine = obj[key].findLastIndex(line => /\s*end\s*/.test(line));
+            if (lastEndLine === -1) {
+                cancellation.execute = true;
+                cancellation.reason = `Could not find a corresponding "end" to remove from the ${key} entry point. Consider removing the "${key}" function definition and having Luaver handle it automatically.`;
             }
-            return obj;
-        },
-        {},
-    );
+        }
+        return obj;
+    }, {});
 
     entryPaths.forEach((path: string) => {
         if (entryPoints.some(e => path.includes(`_${e}`))) return;
         const terms = path.split('.lua')[0].split('.');
         const key = terms.at(-1) as string;
         const fileData = processLuaFile(getAndTrimFile(path), fileProcessors);
-        const insertionInfo = Array.isArray(fileData)
-            ? fileData
-            : fileData.split('\n');
+        const insertionInfo = Array.isArray(fileData) ? fileData : fileData.split('\n');
 
         if (path.includes('.precurse.')) {
             entryFileData[key].unshift(...insertionInfo);
@@ -140,8 +110,7 @@ export default async function transpile(
     output = `PLUGIN_NAME="${luaverConfig.pluginName}";PLUGIN_VERSION="${luaverConfig.pluginVersion}";PLUGIN_AUTHOR="${luaverConfig.pluginAuthor}";PLUGIN_DESCRIPTION="${luaverConfig.pluginDescription}"${luaverConfig.lineSeparator}ENVIRONMENT="${options.environment ?? 'development'}";DISTRO="${options.distro ?? 'development'}"${luaverConfig.lineSeparator}${output}`;
     if (luaverConfig.disableVectorPacking)
         output = `imgui_disable_vector_packing=true${luaverConfig.lineSeparator}${output}`;
-    if (!luaverConfig.dontRandomizeSeed)
-        output = `math.randomseed(os.time())${luaverConfig.lineSeparator}${output}`;
+    if (!luaverConfig.dontRandomizeSeed) output = `math.randomseed(os.time())${luaverConfig.lineSeparator}${output}`;
 
     if (cancellation.execute) {
         await printLuaverError(cancellation.reason);
@@ -150,16 +119,12 @@ export default async function transpile(
 
     fs.writeFileSync(getAbsolutePath('plugin.lua'), output);
 
-    const quinsightStr =
-        path.basename(process.cwd()) === 'Luaver'
-            ? 'quinsight'
-            : `Luaver${path.sep}quinsight`;
+    const quinsightStr = path.basename(process.cwd()) === 'Luaver' ? 'quinsight' : `Luaver${path.sep}quinsight`;
 
     const intellisensePath = luaverConfig.disableVectorPacking
         ? path.join(quinsightStr, 'intellisense.lua')
         : path.join(quinsightStr, 'intellisensePacked.lua');
-    if (fs.existsSync(intellisensePath))
-        fs.copyFileSync(intellisensePath, getAbsolutePath('intellisense.lua'));
+    if (fs.existsSync(intellisensePath)) fs.copyFileSync(intellisensePath, getAbsolutePath('intellisense.lua'));
 
     return paths.length;
 }

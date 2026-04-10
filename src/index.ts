@@ -51,7 +51,7 @@ export default async function transpile(
     );
 
     if (entryPaths.length < entryPoints.length) {
-        printLuaverError(
+        await printLuaverError(
             `You are missing one or more entry points. Please either add existing folders containing said entry points to your Luaver sources list, or create an entry point within an existing source.\n\nMissing: ${entryPoints
                 .filter(pt => !entryPaths.some(f => f.includes(pt)))
                 .map(n => `_${n}.lua`)
@@ -133,7 +133,7 @@ export default async function transpile(
         output = `math.randomseed(os.time())${luaverConfig.lineSeparator}${output}`;
 
     if (cancellation.execute) {
-        printLuaverError(cancellation.reason);
+        await printLuaverError(cancellation.reason);
         return -1;
     }
 

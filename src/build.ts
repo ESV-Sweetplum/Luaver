@@ -63,7 +63,7 @@ export default async function build() {
         ),
     );
 
-    writeSettingsIni();
+    writeSettingsIni(luaverConfig.buildVersionInPluginName);
 
     const packageName = `${luaverConfig.pluginName}-${luaverConfig.pluginVersion}`;
     console.log(

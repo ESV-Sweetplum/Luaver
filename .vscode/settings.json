@@ -1,10 +1,4 @@
 {
-    "zipViewer.textFileAssociations": [
-        {
-            "zipPath": "\\builds\\plumoguSV-v2.0.0.zip",
-            "subfilePath": "plumoguSV-v2.0.0/settings.ini"
-        }
-    ],
     "editor.defaultFormatter": "sumneko.lua",
     "Lua.addonManager.enable": false,
     "Lua.diagnostics.groupSeverity": {

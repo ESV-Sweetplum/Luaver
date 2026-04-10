@@ -2,10 +2,10 @@ import getAbsolutePath from './getAbsolutePath';
 import luaverConfig from './getConfig';
 import * as fs from 'fs';
 
-export default function writeSettingsIni() {
+export default function writeSettingsIni(forceVer?: boolean) {
     const settingsData = `
 [Settings]
-Name = ${luaverConfig.includeVersionInPluginName ? luaverConfig.pluginName + ' v' + luaverConfig.pluginVersion : luaverConfig.pluginName}
+Name = ${luaverConfig.includeVersionInPluginName || forceVer ? luaverConfig.pluginName + ' v' + luaverConfig.pluginVersion : luaverConfig.pluginName}
 Author = ${luaverConfig.pluginAuthor}
 Description = ${luaverConfig.pluginDescription}
 `;

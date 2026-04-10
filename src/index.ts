@@ -33,7 +33,9 @@ export default async function transpile(
             ),
         )
         .flat()
-        .filter((f: string) => f.endsWith('.lua'));
+        .filter(
+            (f: string) => f.endsWith('.lua') && !f.includes('intellisense'),
+        );
 
     const [nonEntryPaths, entryPaths] = paths.reduce(
         ([a1, a2]: [string[], string[]], path) => {

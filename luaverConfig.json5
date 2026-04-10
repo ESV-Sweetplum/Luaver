@@ -1,14 +1,14 @@
 {
     pluginName: "LuaverTest",                   // Also exposed to the PLUGIN_NAME global in Lua.
-    pluginVersion: "1.0.0",                     // Also exposed to the PLUGIN_VERSION global in Lua.
+    pluginVersion: "0.0.0",                     // Also exposed to the PLUGIN_VERSION global in Lua.
     pluginAuthor: "plummyyummy",                // Also exposed to the PLUGIN_AUTHOR global in Lua.
-    pluginDescription: "Nothing Special",       // Also exposed to the PLUGIN_DESCRIPTION global in Lua.
-    includeVersionInPluginName: true,           // If true, will put the version into the plugin name in the settings.ini file.
+    pluginDescription: "",                      // Also exposed to the PLUGIN_DESCRIPTION global in Lua.
+    includeVersionInPluginName: false,          // If true, will put the version into the plugin name in the settings.ini file.
     buildVersionInPluginName: true,             // If true, will put the version into the build name in the settings.ini file.
     sources: ["plugin"],                        // Folders which should be included in the final plugin.
     outDir: "/",                                // Output location with respect to distributed Luaver root.
     lineSeparator: "\n",                        // Consistent line separator for the plugin.
-    disableVectorPacking: false,                // Corresponds to the imgui_disable_vector_packing constant in Quaver. Should be true.
+    disableVectorPacking: true,                 // Corresponds to the imgui_disable_vector_packing constant in Quaver. Should be true.
     dontRandomizeSeed: false,                   // If true, omits the math.randomseed(os.time()) line at the top of the plugin.
     workshopFolder: "assets",                   // The folder which should contain your steam workshop data.
 }

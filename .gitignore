@@ -3,3 +3,4 @@ dist
 builds
 plugin.lua
 settings.ini
+intellisense.lua

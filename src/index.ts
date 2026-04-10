@@ -137,8 +137,6 @@ export default async function transpile(
         return -1;
     }
 
-    if (fs.existsSync(getAbsolutePath('plugin.lua')))
-        fs.rmSync(getAbsolutePath('plugin.lua'));
     fs.writeFileSync(getAbsolutePath('plugin.lua'), output);
 
     const quinsightStr =

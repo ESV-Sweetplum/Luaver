@@ -10,8 +10,5 @@ Author = ${luaverConfig.pluginAuthor}
 Description = ${luaverConfig.pluginDescription}
 `;
 
-    if (fs.existsSync(getAbsolutePath('settings.ini')))
-        fs.rmSync(getAbsolutePath('settings.ini'));
-
     fs.writeFileSync(getAbsolutePath('settings.ini'), settingsData);
 }

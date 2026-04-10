@@ -9,12 +9,23 @@ import counters from './utils/getArbitraryCounter';
 import getAndTrimFile from './utils/getAndTrimFile';
 import getAbsolutePath from './utils/getAbsolutePath';
 import TranspilerOptions from './interfaces/transpilerOptions';
+import checkConfigValidity from './utils/checkConfigValidity';
 
 const entryPoints = ['draw', 'awake'];
 
 export default async function transpile(
     options: Partial<TranspilerOptions> = {},
 ) {
+    const missingConfigParams = checkConfigValidity();
+
+    if (missingConfigParams.length) {
+        await printLuaverError(
+            `You are missing one or more configuration parameters in your Luaver Config. Please add them to build the project.\n\nMissing: ${missingConfigParams.map(([k, t]) => `${k} (${t})`).join('\n         ')}`,
+        );
+
+        return -1;
+    }
+
     let cancellation = {
         execute: false,
         reason: '',

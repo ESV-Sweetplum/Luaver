@@ -1,0 +1,15 @@
+import { LuaverConfigSchema } from '../interfaces/luaverConfig';
+import luaverConfig from './getConfig';
+
+export default function checkConfigValidity() {
+    const missingParams: [string, string][] = [];
+    const schema = LuaverConfigSchema;
+
+    Object.entries(schema).forEach(([k, t]) => {
+        if (!(k in luaverConfig)) {
+            missingParams.push([k, t]);
+        }
+    });
+
+    return missingParams;
+}

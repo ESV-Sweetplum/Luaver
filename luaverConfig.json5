@@ -4,6 +4,7 @@
     pluginAuthor: "plummyyummy",                // Also exposed to the PLUGIN_AUTHOR global in Lua.
     pluginDescription: "Nothing Special",       // Also exposed to the PLUGIN_DESCRIPTION global in Lua.
     includeVersionInPluginName: true,           // If true, will put the version into the plugin name in the settings.ini file.
+    buildVersionInPluginName: true,             // If true, will put the version into the build name in the settings.ini file.
     sources: ["plugin"],                        // Folders which should be included in the final plugin.
     outDir: "/",                                // Output location with respect to distributed Luaver root.
     lineSeparator: "\n",                        // Consistent line separator for the plugin.

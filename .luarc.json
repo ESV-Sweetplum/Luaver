@@ -1,0 +1,47 @@
+{
+    "type.castNumberToInteger": true,
+    "type.inferParamType": true,
+    "type.checkTableShape": true,
+    "diagnostics.disable": [
+        "lowercase-global",
+        "duplicate-set-field",
+        "duplicate-doc-alias",
+        "unused-local",
+        "duplicate-doc-field"
+    ],
+    "runtime.version": "Lua 5.2",
+    "workspace.ignoreDir": [
+        ".vscode",
+        "plugin.lua"
+    ],
+    "codeLens.enable": true,
+    "workspace.ignoreSubmodules": false,
+    "workspace.useGitIgnore": true,
+    "diagnostics.globals": [
+        "PLUGIN_NAME",
+        "PLUGIN_AUTHOR",
+        "PLUGIN_VERSION",
+        "PLUGIN_DESCRIPTION",
+        "ENVIRONMENT",
+        "DISTRO",
+        "imgui_disable_vector_packing"
+    ],
+    "addonManager.enable": false,
+    "diagnostics.groupSeverity": {
+        "type-check": "Error",
+        "unused": "Warning",
+        "strict": "Error",
+        "duplicate": "Warning",
+        "ambiguity": "Error",
+        "luadoc": "Warning",
+        "await": "Error",
+        "codestyle": "Error",
+        "conventions": "Fallback",
+        "global": "Fallback",
+        "redefined": "Fallback",
+        "strong": "Warning",
+        "unbalanced": "Error"
+    },
+    "diagnostics.libraryFiles": "Disable",
+    "runtime.nonstandardSymbol": ["|lambda|", "!="]
+}

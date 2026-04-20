@@ -17,9 +17,9 @@ export default function LintUnusedFunctions(input: string[], config: LuaverConfi
             name => !name.startsWith('string') && !name.startsWith('table') && !['awake', 'draw'].includes(name),
         );
 
-        const ac = new acBuilder(functions.map(fn => [`${fn}(`, `${fn},`, `${fn})`]).flat());
+        const ac = new acBuilder(functions.map(fn => [`${fn}(`, `${fn},`, `${fn})`, `= ${fn}`]).flat());
         const acResult = ac.search(joinedInput).reduce((obj: Record<string, number[]>, arr) => {
-            const target = arr[1][0].replaceAll(/[\(,\)]/g, '');
+            const target = arr[1][0].replaceAll(/([\(,\)]|= )/g, '');
             if (obj[target]) {
                 obj[target].push(arr[0]);
             } else {

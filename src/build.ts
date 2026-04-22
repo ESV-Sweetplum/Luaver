@@ -19,8 +19,9 @@ export default async function build() {
     const fileCount1 = await transpiler({
         distro: 'github',
         environment: 'production',
+        destination: 'githubTemp.lua',
     });
-    const pluginGithub = fs.readFileSync(getAbsolutePath('plugin.lua'), 'utf-8');
+    const pluginGithub = fs.readFileSync(getAbsolutePath('githubTemp.lua'), 'utf-8');
 
     console.log(chalk.blueBright(chalk.bold(`Internally saved ${chalk.redBright('GitHub/plugin.lua')}.`)));
 
@@ -33,8 +34,9 @@ export default async function build() {
     const fileCount2 = await transpiler({
         distro: 'steam',
         environment: 'production',
+        destination: 'steamTemp.lua',
     });
-    const pluginSteam = fs.readFileSync(getAbsolutePath('plugin.lua'), 'utf-8');
+    const pluginSteam = fs.readFileSync(getAbsolutePath('steamTemp.lua'), 'utf-8');
 
     console.log(chalk.blueBright(chalk.bold(`Internally saved ${chalk.redBright('Steam/plugin.lua')}.`)));
 
@@ -87,16 +89,16 @@ export default async function build() {
                 }
             } else {
                 console.log(
-                    chalk.blueBright(
+                    chalk.bgBlack(
                         chalk.bold(
-                            `The listed workshop folder ${chalk.redBright(luaverConfig.workshopFolder)} does not exist.`,
+                            `The listed workshop folder ${chalk.redBright(luaverConfig.workshopFolder)} does not exist. No workshop data was added to the steam distribution.`,
                         ),
                     ),
                 );
             }
         } else {
             console.log(
-                chalk.blueBright(
+                chalk.bgBlack(
                     chalk.bold(
                         `No workshop folder was listed in ${chalk.redBright('luaverConfig.json5')}. The steam output folder will be equivalent to the unzipped GitHub folder.`,
                     ),
@@ -121,14 +123,14 @@ export default async function build() {
                 ),
             ),
         );
-
-        fs.rmSync('temp-build-github', { recursive: true, force: true });
-        fs.rmSync('temp-build-steam', { recursive: true, force: true });
     } catch (e) {
         console.log(chalk.bgRedBright(`An error occurred during the build process: ${e}`));
-
+    } finally {
         fs.rmSync('temp-build-github', { recursive: true, force: true });
         fs.rmSync('temp-build-steam', { recursive: true, force: true });
+
+        fs.rmSync(getAbsolutePath('githubTemp.lua'));
+        fs.rmSync(getAbsolutePath('steamTemp.lua'));
     }
 
     // Undoes any changes done by the build process.

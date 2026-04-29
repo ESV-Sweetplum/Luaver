@@ -28,4 +28,5 @@
         "PLUGIN_DESCRIPTION",
         "imgui_disable_vector_packing"
     ],
+    "Lua.workspace.library": ["intellisense.lua"]
 }

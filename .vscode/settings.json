@@ -27,5 +27,5 @@
         "PLUGIN_VERSION",
         "PLUGIN_DESCRIPTION",
         "imgui_disable_vector_packing"
-    ]
+    ],
 }

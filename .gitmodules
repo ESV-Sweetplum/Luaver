@@ -1,3 +1,4 @@
 [submodule "quinsight"]
 	path = quinsight
 	url = https://github.com/ESV-Sweetplum/quinsight
+	branch = release-unpacked

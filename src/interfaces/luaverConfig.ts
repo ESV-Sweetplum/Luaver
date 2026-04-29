@@ -8,7 +8,6 @@ export default interface LuaverConfig {
     sources: string[]; // Folders which should be included in the final plugin.
     outDir: string; // Output location with respect to distributed Luaver root.
     lineSeparator: '\n' | '\r\n'; // Consistent line separator for the plugin.
-    disableVectorPacking: boolean; // Corresponds to the imgui_disable_vector_packing constant in Quaver. Should be true.
     dontRandomizeSeed: boolean; // If true, omits the math.randomseed(os.time()) line at the top of the plugin.
     workshopFolder: string; // The folder which should contain your steam workshop data.
 }
@@ -23,7 +22,6 @@ export const LuaverConfigSchema: Record<string, 'string' | 'boolean' | 'number' 
     sources: 'string[]',
     outDir: 'string',
     lineSeparator: 'string',
-    disableVectorPacking: 'boolean',
     dontRandomizeSeed: 'boolean',
     workshopFolder: 'string',
 };

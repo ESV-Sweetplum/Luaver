@@ -43,5 +43,6 @@
         "unbalanced": "Error"
     },
     "diagnostics.libraryFiles": "Disable",
-    "runtime.nonstandardSymbol": ["|lambda|", "!="]
+    "runtime.nonstandardSymbol": ["|lambda|", "!="],
+    "workspace.library": ["intellisense.lua"]
 }

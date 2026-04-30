@@ -9,7 +9,7 @@ import getAndTrimFile from './utils/getAndTrimFile';
 import getAbsolutePath from './utils/getAbsolutePath';
 import TranspilerOptions from './interfaces/transpilerOptions';
 import checkConfigValidity from './utils/checkConfigValidity';
-import { getInternalProcessors } from './utils/getProcessors';
+import getProcessors, { getInternalProcessors } from './utils/getProcessors';
 import wrapAnsi from 'wrap-ansi';
 import './utils/logWrapped';
 
@@ -45,6 +45,10 @@ export default async function transpile(options: Partial<TranspilerOptions> = {}
     }); // Resets all counters to prevent strange file inconsistencies
 
     const processors = luaverConfig.disableDefaultProcessors ? [] : await getInternalProcessors();
+    for (const p of luaverConfig.externalProcessors ?? []) {
+        processors.push(...(await getProcessors(p)));
+    }
+
     const paths = luaverConfig.sources
         .map((source: string) =>
             getFilesRecursively(path.join(__dirname, '..', source)).sort(

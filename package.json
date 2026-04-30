@@ -4,9 +4,10 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "tsc && node dist/watch",
+        "compile": "tsc",
+        "dev": "npm run compile && node dist/watch",
         "watch": "npm run dev",
-        "build": "tsc && node dist/build",
+        "build": "npm run compile && node dist/build",
         "update": "git submodule update --recursive --remote"
     },
     "repository": {

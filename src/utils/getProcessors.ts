@@ -2,8 +2,14 @@ import LuaProcessor from '../interfaces/luaProcessor';
 import { getFilesRecursively } from './getFilesRecursively';
 import * as path from 'path';
 
-export default async function getProcessors(): Promise<LuaProcessor[]> {
-    const processorPaths = getFilesRecursively('dist/_processors');
+export async function getInternalProcessors(): Promise<LuaProcessor[]> {
+    const processors = await getProcessors('dist/_processors');
+
+    return processors;
+}
+
+export default async function getProcessors(p: string): Promise<LuaProcessor[]> {
+    const processorPaths = getFilesRecursively(p);
     const processors: LuaProcessor[] = [];
 
     for (const processorPath of processorPaths) {

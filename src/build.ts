@@ -44,7 +44,7 @@ export default async function build() {
 
     writeSettingsIni(luaverConfig.buildVersionInPluginName);
 
-    const packageName = `${luaverConfig.pluginName}-${luaverConfig.pluginVersion}`;
+    const packageName = `${luaverConfig.pluginName}${luaverConfig.pluginVersion ? `-${luaverConfig.pluginVersion}` : ''}`;
     console.log(chalk.blueBright(chalk.bold(`Zipping into ${chalk.redBright(`builds/${packageName}`)}...`)));
 
     const zip = new AdmZip();

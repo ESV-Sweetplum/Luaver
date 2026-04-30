@@ -6,7 +6,7 @@ export default function checkConfigValidity() {
     const schema = LuaverConfigSchema;
 
     Object.entries(schema).forEach(([k, t]) => {
-        if (!(k in luaverConfig)) {
+        if (!(k in luaverConfig) && !t.includes('?')) {
             missingParams.push([k, t]);
         }
     });

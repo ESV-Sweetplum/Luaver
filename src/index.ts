@@ -18,7 +18,7 @@ const entryPoints = ['draw', 'awake'];
 export default async function transpile(options: Partial<TranspilerOptions> = {}) {
     const missingConfigParams = checkConfigValidity();
 
-    if (missingConfigParams[0][0] === 'MISSING CONFIG') {
+    if (missingConfigParams.length && missingConfigParams[0][0] === 'MISSING CONFIG') {
         await printLuaverError(
             `Could not find your Luaver Config. Either create a new luaverConfig.json5 file in the root of your project and follow the documentation, clone the existing luaverConfig.json5 from the Luaver.Template repository, or create a new templated project and migrate to that project instead.`,
         );
@@ -139,7 +139,9 @@ export default async function transpile(options: Partial<TranspilerOptions> = {}
 
 export async function printLuaverError(msg: string) {
     renderBigLine(1, chalk.red);
-    console.error(wrapAnsi(chalk.bgRedBright('LUAVER ERROR') + chalk.red(' ' + msg), process.stdout.columns));
+    console.error(
+        wrapAnsi(chalk.bgRedBright('LUAVER ERROR') + chalk.red(' ' + msg), process.stdout.columns, { trim: false }),
+    );
     renderBigLine(2, chalk.red);
 }
 

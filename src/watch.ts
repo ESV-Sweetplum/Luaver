@@ -3,10 +3,8 @@ import chalk from 'chalk';
 import { performance } from 'perf_hooks';
 import luaverConfig, { reloadConfig } from './utils/getConfig';
 import transpile from '.';
-import * as fs from 'fs';
-import getAbsolutePath from './utils/getAbsolutePath';
-import * as path from 'path';
 import writeSettingsIni from './utils/writeSettingsIni';
+import './utils/logWrapped';
 
 const debounce = (fn: Function, ms = 300) => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -16,13 +14,13 @@ const debounce = (fn: Function, ms = 300) => {
     };
 };
 
-chokidar.watch(luaverConfig.sources, { ignoreInitial: true }).on(
+chokidar.watch(luaverConfig?.sources ?? [], { ignoreInitial: true }).on(
     'all',
     debounce((event: keyof chokidar.FSWatcherEventMap, path: string) => main(event, path), 100),
 );
 
 chokidar.watch('luaverConfig.json5', { ignoreInitial: true }).on('change', e => {
-    console.log(
+    console.logWrapped(
         chalk.bgRedBright(`\nChange detected on LuaverConfig. Please restart the watcher to apply these changes.`),
     );
     reloadConfig();
@@ -30,12 +28,12 @@ chokidar.watch('luaverConfig.json5', { ignoreInitial: true }).on('change', e => 
 
 async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
     const startTime = performance.now();
-    console.log(`\nEvent ${chalk.red(event)} detected on file ${chalk.red(path)}. Now retranspiling...`);
+    console.logWrapped(`\nEvent ${chalk.red(event)} detected on file ${chalk.red(path)}. Now retranspiling...`);
 
     const fileCount = await transpile();
     const endTime = performance.now();
     if (fileCount === -1) return;
-    console.log(
+    console.logWrapped(
         `Successfully transpiled ${chalk.green(fileCount)} files in ${chalk.green(
             `${Math.round((endTime - startTime) * 1000) / 1000}ms`,
         )}.\n`,
@@ -47,7 +45,7 @@ transpile().then(ct => {
         process.exit(1);
     }
     writeSettingsIni();
-    console.log(
+    console.logWrapped(
         chalk.blueBright(
             chalk.bold('Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.'),
         ),

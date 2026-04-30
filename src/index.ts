@@ -10,11 +10,21 @@ import getAbsolutePath from './utils/getAbsolutePath';
 import TranspilerOptions from './interfaces/transpilerOptions';
 import checkConfigValidity from './utils/checkConfigValidity';
 import { getInternalProcessors } from './utils/getProcessors';
+import wrapAnsi from 'wrap-ansi';
+import './utils/logWrapped';
 
 const entryPoints = ['draw', 'awake'];
 
 export default async function transpile(options: Partial<TranspilerOptions> = {}) {
     const missingConfigParams = checkConfigValidity();
+
+    if (missingConfigParams[0][0] === 'MISSING CONFIG') {
+        await printLuaverError(
+            `Could not find your Luaver Config. Either create a new luaverConfig.json5 file in the root of your project and follow the documentation, clone the existing luaverConfig.json5 from the Luaver.Template repository, or create a new templated project and migrate to that project instead.`,
+        );
+
+        return -1;
+    }
 
     if (missingConfigParams.length) {
         await printLuaverError(
@@ -128,13 +138,15 @@ export default async function transpile(options: Partial<TranspilerOptions> = {}
 }
 
 export async function printLuaverError(msg: string) {
-    renderBigLine(1);
-    console.error(chalk.bgRedBright('LUAVER ERROR') + chalk.red(' ' + msg));
-    renderBigLine(2);
+    renderBigLine(1, chalk.red);
+    console.error(wrapAnsi(chalk.bgRedBright('LUAVER ERROR') + chalk.red(' ' + msg), process.stdout.columns));
+    renderBigLine(2, chalk.red);
 }
 
-export function renderBigLine(type: 0 | 1 | 2) {
+export function renderBigLine(type: 0 | 1 | 2, fn?: (str: string) => string) {
+    const line = '─'.repeat(process.stdout.columns);
+    const output = fn ? fn(line) : line;
     if (type === 1) console.log();
-    console.log('─'.repeat(process.stdout.columns));
+    console.logWrapped(output);
     if (type === 2) console.log();
 }

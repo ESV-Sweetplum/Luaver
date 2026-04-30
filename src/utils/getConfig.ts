@@ -4,6 +4,8 @@ import * as path from 'path';
 import LuaverConfig from '../interfaces/luaverConfig';
 
 export function reloadConfig() {
+    if (!fs.existsSync('luaverConfig.json5')) return null as unknown as LuaverConfig;
+
     const config: LuaverConfig = json5.parse(fs.readFileSync('luaverConfig.json5', 'utf-8'));
 
     if (!config.sources) config.sources = [];

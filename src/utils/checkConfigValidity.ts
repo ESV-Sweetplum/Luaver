@@ -25,6 +25,13 @@ export interface Violation {
 export function checkConfigViolation() {
     const violations: Violation[] = [];
 
+    if (!luaverConfig) {
+        Object.keys(LuaverConfigSchema).forEach(k => {
+            violations.push({ type: 'Missing', key: k, message: 'Required entry was not given.' });
+        });
+        return violations;
+    }
+
     Object.entries(LuaverConfigSchema).forEach(([k, t]: [string, string]) => {
         const correspondingEntry = luaverConfig[k as keyof typeof LuaverConfigSchema];
         if (!t.includes('?') && correspondingEntry == undefined) {

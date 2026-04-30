@@ -19,9 +19,10 @@ export default async function transpile(options: Partial<TranspilerOptions> = {}
     const missingConfigParams = checkConfigValidity();
 
     if (missingConfigParams.length && missingConfigParams[0][0] === 'MISSING CONFIG') {
-        await printLuaverError(
-            `Could not find your Luaver Config. Either create a new luaverConfig.json5 file in the root of your project and follow the documentation, clone the existing luaverConfig.json5 from the Luaver.Template repository, or create a new templated project and migrate to that project instead.`,
-        );
+        const msg = fs.existsSync(getAbsolutePath('modules'))
+            ? 'bruh'
+            : `Could not find your Luaver Config. Either create a new luaverConfig.json5 file in the root of your project and follow the documentation, clone the existing luaverConfig.json5 from the Luaver.Template repository, or create a new templated project and migrate to that project instead.`;
+        await printLuaverError(msg);
 
         return -1;
     }

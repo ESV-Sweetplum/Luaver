@@ -27,7 +27,6 @@ export function checkConfigViolation() {
 
     Object.entries(LuaverConfigSchema).forEach(([k, t]: [string, string]) => {
         const correspondingEntry = luaverConfig[k as keyof typeof LuaverConfigSchema];
-        console.log(k, t, correspondingEntry);
         if (!t.includes('?') && correspondingEntry == undefined) {
             violations.push({ type: 'Missing', key: k, message: 'Required entry was not given.' });
         }

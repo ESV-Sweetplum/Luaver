@@ -12,6 +12,8 @@ export function reloadConfig() {
         config.sources.unshift('Luaver/embedded');
     }
 
+    if (!config.lineSeparator) config.lineSeparator = '\n';
+
     return config;
 }
 

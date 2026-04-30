@@ -17,7 +17,7 @@ export const LuaverConfigSchema = {
 } as const;
 
 type LuaverConfig = {
-    [K in keyof typeof LuaverConfigSchema]: TypeMap[(typeof LuaverConfigSchema)[K]];
+    -readonly [K in keyof typeof LuaverConfigSchema]: TypeMap[(typeof LuaverConfigSchema)[K]];
 };
 
 export default LuaverConfig;

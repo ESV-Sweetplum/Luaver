@@ -6,6 +6,5 @@
     buildVersionInPluginName: true,
     sources: ["plugin"],
     outDir: "/",
-    lineSeparator: "\n",
     workshopFolder: "assets",
 }

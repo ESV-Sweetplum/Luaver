@@ -22,8 +22,6 @@
     },
     "homepage": "https://github.com/ESV-Sweetplum/Luaver#readme",
     "dependencies": {
-        "@types/ahocorasick": "^1.0.0",
-        "@types/node": "^25.0.10",
         "adm-zip": "^0.5.16",
         "ahocorasick": "^1.0.2",
         "chalk": "^5.6.2",
@@ -34,6 +32,8 @@
     },
     "devDependencies": {
         "@types/adm-zip": "^0.5.8",
-        "@types/luaparse": "^0.2.13"
+        "@types/ahocorasick": "^1.0.0",
+        "@types/luaparse": "^0.2.13",
+        "@types/node": "^25.6.0"
     }
 }

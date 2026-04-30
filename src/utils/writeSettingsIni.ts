@@ -10,5 +10,5 @@ Author = ${luaverConfig.pluginAuthor}
 Description = ${luaverConfig.pluginDescription ?? 'No plugin description given.'}
 `;
 
-    fs.writeFileSync(getAbsolutePath('settings.ini'), settingsData);
+    fs.writeFileSync(getAbsolutePath('settings.ini'), settingsData.trim());
 }

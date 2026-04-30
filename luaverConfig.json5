@@ -1,10 +1,9 @@
 {
-    pluginName: "LuaverTest",
-    pluginVersion: "0.0.0",
-    pluginAuthor: "plummyyummy",
-    pluginDescription: "",
-    buildVersionInPluginName: true,
+    pluginName: "Luaver.Test",
+    // pluginVersion: "0.0.0",
+    pluginAuthor: "plum.",
+    // pluginDescription: "",
     sources: ["plugin"],
     outDir: "/",
-    workshopFolder: "assets",
+    // workshopFolder: "assets",
 }

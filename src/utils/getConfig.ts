@@ -6,13 +6,14 @@ import LuaverConfig from '../interfaces/luaverConfig';
 export function reloadConfig() {
     const config: LuaverConfig = json5.parse(fs.readFileSync('luaverConfig.json5', 'utf-8'));
 
+    if (!config.sources) config.sources = [];
+    if (!config.lineSeparator) config.lineSeparator = '\n';
+
     if (path.basename(process.cwd()) === 'Luaver') {
         config.sources.unshift('embedded');
     } else {
         config.sources.unshift('Luaver/embedded');
     }
-
-    if (!config.lineSeparator) config.lineSeparator = '\n';
 
     return config;
 }

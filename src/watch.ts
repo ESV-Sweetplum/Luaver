@@ -43,12 +43,13 @@ async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
 }
 
 transpile().then(ct => {
-    if (ct === -1) return;
+    if (ct === -1) {
+        process.exit(1);
+    }
+    writeSettingsIni();
     console.log(
         chalk.blueBright(
             chalk.bold('Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.'),
         ),
     );
 });
-
-writeSettingsIni();

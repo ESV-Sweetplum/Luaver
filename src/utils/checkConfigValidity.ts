@@ -4,7 +4,8 @@ import luaverConfig from './getConfig';
 export default function checkConfigValidity() {
     const missingParams: [string, string][] = [];
 
-    if (luaverConfig?.sources.length === 1) missingParams.push(['sources', 'string[]']);
+    if (luaverConfig?.sources.length === 1)
+        missingParams.push(['sources', 'string[]']);
     if (!luaverConfig) return [['MISSING CONFIG', 'MISSING CONFIG']];
 
     Object.entries(LuaverConfigSchema).forEach(([k, t]) => {
@@ -27,29 +28,49 @@ export function checkConfigViolation() {
 
     if (!luaverConfig) {
         Object.keys(LuaverConfigSchema).forEach(k => {
-            violations.push({ type: 'Missing', key: k, message: 'Required entry was not given.' });
+            violations.push({
+                type: 'Missing',
+                key: k,
+                message: 'Required entry was not given.',
+            });
         });
         return violations;
     }
 
     Object.entries(LuaverConfigSchema).forEach(([k, t]: [string, string]) => {
-        const correspondingEntry = luaverConfig[k as keyof typeof LuaverConfigSchema];
+        const correspondingEntry =
+            luaverConfig[k as keyof typeof LuaverConfigSchema];
         if (!t.includes('?') && correspondingEntry == undefined) {
-            violations.push({ type: 'Missing', key: k, message: 'Required entry was not given.' });
+            violations.push({
+                type: 'Missing',
+                key: k,
+                message: 'Required entry was not given.',
+            });
         }
         t = t.replaceAll('?', '');
         if (t.includes('[]') && correspondingEntry) {
             if (!Array.isArray(correspondingEntry)) {
-                violations.push({ type: 'WrongType', key: k, message: "Specified array and didn't get one." });
-            } else if (!correspondingEntry.every(i => typeof i === t)) {
                 violations.push({
                     type: 'WrongType',
                     key: k,
-                    message: "One or more elements in this array isn't the designated type.",
+                    message: "Specified array and didn't get one.",
+                });
+            } else if (
+                !correspondingEntry.every(i => typeof i === t.slice(0, -2))
+            ) {
+                violations.push({
+                    type: 'WrongType',
+                    key: k,
+                    message:
+                        "One or more elements in this array isn't the designated type.",
                 });
             }
         } else {
-            if (typeof correspondingEntry !== t && correspondingEntry && t !== 'LineSeparator') {
+            if (
+                typeof correspondingEntry !== t &&
+                correspondingEntry &&
+                t !== 'LineSeparator'
+            ) {
                 violations.push({
                     type: 'WrongType',
                     key: k,

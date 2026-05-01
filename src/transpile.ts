@@ -8,5 +8,5 @@ transpile().then(ct => {
         console.log(chalk.red(chalk.bold('An error occurred.')));
         process.exit(1);
     }
-    console.log(chalk.green(chalk.bold('An error occurred.')));
+    console.log(chalk.green(chalk.bold('Successfully initialized plugin.')));
 });

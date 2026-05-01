@@ -11,4 +11,5 @@ violations.forEach(v => {
     );
 });
 
-if (violations.length) console.log(chalk.red('The current script may not run as usual.'));
+if (violations.filter(v => v.type === 'WrongType').length)
+    console.log(chalk.red('The current script may not run as usual.'));

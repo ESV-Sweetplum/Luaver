@@ -55,7 +55,7 @@ async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
     console.logWrapped(
         `Successfully transpiled ${chalk.green(fileCount)} files in ${chalk.green(
             `${Math.round((endTime - startTime) * 1000) / 1000}ms`,
-        )}.\n${unlockAttempts ? chalk.gray(`(required ${unlockAttempts} unlock attempts)`) : ''}`,
+        )}.\n${unlockAttempts ? chalk.gray(`(required ${unlockAttempts} unlock attempt${unlockAttempts > 1 ? 's' : ''})`) : ''}`,
     );
 }
 

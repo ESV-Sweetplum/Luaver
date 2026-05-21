@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import luaverConfig from './getConfig';
+import fileUnlocked from './fileUnlocked';
 
 export default function getAndTrimFile(path: string) {
     return fs

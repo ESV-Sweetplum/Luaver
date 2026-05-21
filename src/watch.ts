@@ -6,6 +6,8 @@ import transpile from '.';
 import writeSettingsIni from './utils/writeSettingsIni';
 import './utils/logWrapped';
 
+let transpileLock = true;
+
 const debounce = (fn: Function, ms = 300) => {
     let timeoutId: ReturnType<typeof setTimeout>;
     return function (this: any, ...args: any[]) {
@@ -16,38 +18,57 @@ const debounce = (fn: Function, ms = 300) => {
 
 chokidar.watch(luaverConfig?.sources ?? [], { ignoreInitial: true }).on(
     'all',
-    debounce((event: keyof chokidar.FSWatcherEventMap, path: string) => main(event, path), 100),
+    debounce(
+        (event: keyof chokidar.FSWatcherEventMap, path: string) =>
+            main(event, path),
+        200,
+    ),
 );
 
-chokidar.watch('luaverConfig.json5', { ignoreInitial: true }).on('change', e => {
-    console.logWrapped(
-        chalk.bgRedBright(`\nChange detected on LuaverConfig. Please restart the watcher to apply these changes.`),
-    );
-    reloadConfig();
-});
+chokidar
+    .watch('luaverConfig.json5', { ignoreInitial: true })
+    .on('change', e => {
+        console.logWrapped(
+            chalk.bgRedBright(
+                `\nChange detected on LuaverConfig. Please restart the watcher to apply these changes.`,
+            ),
+        );
+        reloadConfig();
+    });
 
 async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
+    if (transpileLock) {
+        console.logWrapped(
+            `\nEvent ${chalk.red(event)} detected on file ${chalk.red(path)}. The transpiler is currently busy and will retranspile in due time.`,
+        );
+    }
     const startTime = performance.now();
-    console.logWrapped(`\nEvent ${chalk.red(event)} detected on file ${chalk.red(path)}. Now retranspiling...`);
+    console.logWrapped(
+        `\nEvent ${chalk.red(event)} detected on file ${chalk.red(path)}. Now retranspiling...`,
+    );
+    transpileLock = true;
 
-    const fileCount = await transpile();
+    const [fileCount, unlockAttempts] = await transpile();
     const endTime = performance.now();
+    transpileLock = false;
     if (fileCount === -1) return;
     console.logWrapped(
         `Successfully transpiled ${chalk.green(fileCount)} files in ${chalk.green(
             `${Math.round((endTime - startTime) * 1000) / 1000}ms`,
-        )}.\n`,
+        )}.\n${unlockAttempts ? chalk.gray(`(required ${unlockAttempts} unlock attempts)`) : ''}`,
     );
 }
 
-transpile().then(ct => {
+transpile().then(([ct, att]) => {
     if (ct === -1) {
         process.exit(1);
     }
     writeSettingsIni();
     console.logWrapped(
         chalk.blueBright(
-            chalk.bold('Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.'),
+            chalk.bold(
+                'Watcher initialized and plugin transpiled. Make a change to a file to re-transpile.',
+            ),
         ),
     );
 });

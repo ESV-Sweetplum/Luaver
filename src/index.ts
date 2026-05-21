@@ -12,19 +12,25 @@ import checkConfigValidity from './utils/checkConfigValidity';
 import getProcessors, { getInternalProcessors } from './utils/getProcessors';
 import wrapAnsi from 'wrap-ansi';
 import './utils/logWrapped';
+import fileUnlocked from './utils/fileUnlocked';
 
 const entryPoints = ['draw', 'awake'];
 
-export default async function transpile(options: Partial<TranspilerOptions> = {}) {
+export default async function transpile(
+    options: Partial<TranspilerOptions> = {},
+) {
     const missingConfigParams = checkConfigValidity();
 
-    if (missingConfigParams.length && missingConfigParams[0][0] === 'MISSING CONFIG') {
+    if (
+        missingConfigParams.length &&
+        missingConfigParams[0][0] === 'MISSING CONFIG'
+    ) {
         const msg = fs.existsSync('modules/setup')
             ? 'You have not set up your Luaver project yet. Please run "npm run setup" in your terminal to begin the setup process.'
             : `Could not find your Luaver Config. Either create a new luaverConfig.json5 file in the root of your project and follow the documentation, clone the existing luaverConfig.json5 from the Luaver.Template repository, or create a new templated project and migrate to that project instead.`;
         await printLuaverError(msg);
 
-        return -1;
+        return [-1, -1];
     }
 
     if (missingConfigParams.length) {
@@ -32,7 +38,7 @@ export default async function transpile(options: Partial<TranspilerOptions> = {}
             `You are missing one or more configuration parameters in your Luaver Config. Please add them to build the project.\n\nMissing: ${missingConfigParams.map(([k, t]) => `${k} (${t})`).join('\n         ')}`,
         );
 
-        return -1;
+        return [-1, -1];
     }
 
     let cancellation = {
@@ -44,7 +50,9 @@ export default async function transpile(options: Partial<TranspilerOptions> = {}
         counters[key] = 0;
     }); // Resets all counters to prevent strange file inconsistencies
 
-    const processors = luaverConfig.disableDefaultProcessors ? [] : await getInternalProcessors();
+    const processors = luaverConfig.disableDefaultProcessors
+        ? []
+        : await getInternalProcessors();
     for (const p of luaverConfig.externalProcessors ?? []) {
         processors.push(...(await getProcessors(p)));
     }
@@ -52,15 +60,23 @@ export default async function transpile(options: Partial<TranspilerOptions> = {}
     const paths = luaverConfig.sources
         .map((source: string) =>
             getFilesRecursively(path.join(__dirname, '..', source)).sort(
-                (a: string, b: string) => +b.includes('.priority.') - +a.includes('.priority.'),
+                (a: string, b: string) =>
+                    +b.includes('.priority.') - +a.includes('.priority.'),
             ),
         )
         .flat()
-        .filter((f: string) => f.endsWith('.lua') && !f.includes('intellisense'));
+        .filter(
+            (f: string) => f.endsWith('.lua') && !f.includes('intellisense'),
+        );
 
     const [nonEntryPaths, entryPaths] = paths.reduce(
         ([a1, a2]: [string[], string[]], path) => {
-            (entryPoints.some(e => path.includes(`.${e}.`) || path.includes(`_${e}`)) ? a2 : a1).push(path);
+            (entryPoints.some(
+                e => path.includes(`.${e}.`) || path.includes(`_${e}`),
+            )
+                ? a2
+                : a1
+            ).push(path);
             return [a1, a2];
         },
         [[], []],
@@ -74,37 +90,57 @@ export default async function transpile(options: Partial<TranspilerOptions> = {}
                 .join(', ')}`,
         );
 
-        return -1;
+        return [-1, -1];
     }
 
-    const fileProcessors = processors.filter(processor => processor.context === 'file');
-    const pluginProcessors = processors.filter(processor => processor.context === 'plugin');
-    const fileData = nonEntryPaths.map((path: string) => processLuaFile(getAndTrimFile(path), fileProcessors));
+    const fileProcessors = processors.filter(
+        processor => processor.context === 'file',
+    );
+    const pluginProcessors = processors.filter(
+        processor => processor.context === 'plugin',
+    );
+    const fileData = nonEntryPaths.map((path: string) =>
+        processLuaFile(getAndTrimFile(path), fileProcessors),
+    );
 
-    const entryFileData: Record<string, string[]> = entryPaths.reduce((obj: Record<string, string[]>, path: string) => {
-        if (!entryPoints.some(e => path.includes(`_${e}`))) return obj;
-        const key = path.split('_')[1].split('.lua')[0];
-        const fileData = processLuaFile(getAndTrimFile(path), fileProcessors);
-        obj[key] = Array.isArray(fileData) ? fileData : fileData.split(luaverConfig.lineSeparator);
+    const entryFileData: Record<string, string[]> = entryPaths.reduce(
+        (obj: Record<string, string[]>, path: string) => {
+            if (!entryPoints.some(e => path.includes(`_${e}`))) return obj;
+            const key = path.split('_')[1].split('.lua')[0];
+            const fileData = processLuaFile(
+                getAndTrimFile(path),
+                fileProcessors,
+            );
+            obj[key] = Array.isArray(fileData)
+                ? fileData
+                : fileData.split(luaverConfig.lineSeparator);
 
-        const fnDefLine = obj[key].findIndex(line => line.includes(`function ${key}()`));
-        if (fnDefLine !== -1) {
-            obj[key].splice(fnDefLine);
-            const lastEndLine = obj[key].findLastIndex(line => /\s*end\s*/.test(line));
-            if (lastEndLine === -1) {
-                cancellation.execute = true;
-                cancellation.reason = `Could not find a corresponding "end" to remove from the ${key} entry point. Consider removing the "${key}" function definition and having Luaver handle it automatically.`;
+            const fnDefLine = obj[key].findIndex(line =>
+                line.includes(`function ${key}()`),
+            );
+            if (fnDefLine !== -1) {
+                obj[key].splice(fnDefLine);
+                const lastEndLine = obj[key].findLastIndex(line =>
+                    /\s*end\s*/.test(line),
+                );
+                if (lastEndLine === -1) {
+                    cancellation.execute = true;
+                    cancellation.reason = `Could not find a corresponding "end" to remove from the ${key} entry point. Consider removing the "${key}" function definition and having Luaver handle it automatically.`;
+                }
             }
-        }
-        return obj;
-    }, {});
+            return obj;
+        },
+        {},
+    );
 
     entryPaths.forEach((path: string) => {
         if (entryPoints.some(e => path.includes(`_${e}`))) return;
         const terms = path.split('.lua')[0].split('.');
         const key = terms.at(-1) as string;
         const fileData = processLuaFile(getAndTrimFile(path), fileProcessors);
-        const insertionInfo = Array.isArray(fileData) ? fileData : fileData.split('\n');
+        const insertionInfo = Array.isArray(fileData)
+            ? fileData
+            : fileData.split('\n');
 
         if (path.includes('.precurse.')) {
             entryFileData[key].unshift(...insertionInfo);
@@ -123,29 +159,41 @@ export default async function transpile(options: Partial<TranspilerOptions> = {}
     if (Array.isArray(output)) output = output.join(luaverConfig.lineSeparator);
 
     output = `imgui_disable_vector_packing=true${luaverConfig.lineSeparator}PLUGIN_NAME="${luaverConfig.pluginName}";${luaverConfig.pluginVersion ? `PLUGIN_VERSION="${luaverConfig.pluginVersion};"` : ''}PLUGIN_AUTHOR="${luaverConfig.pluginAuthor}";PLUGIN_DESCRIPTION="${luaverConfig.pluginDescription ?? 'No plugin description given.'}"${luaverConfig.lineSeparator}ENVIRONMENT="${options.environment ?? 'development'}";DISTRO="${options.distro ?? 'development'}"${luaverConfig.lineSeparator}${output}`;
-    if (!luaverConfig.dontRandomizeSeed) output = `math.randomseed(os.time())${luaverConfig.lineSeparator}${output}`;
+    if (!luaverConfig.dontRandomizeSeed)
+        output = `math.randomseed(os.time())${luaverConfig.lineSeparator}${output}`;
 
     output = `-- [${luaverConfig.pluginName}${luaverConfig.pluginVersion ? ` ${luaverConfig.pluginVersion}` : ''}] (Compiled by Luaver)${luaverConfig.lineSeparator}-- DO NOT EDIT THIS FILE DIRECTLY.${luaverConfig.lineSeparator.repeat(2)}${output}`;
 
     if (cancellation.execute) {
         await printLuaverError(cancellation.reason);
-        return -1;
+        return [-1, -1];
     }
 
-    fs.writeFileSync(getAbsolutePath(options.destination ?? 'plugin.lua'), output);
+    const destination = getAbsolutePath(options.destination ?? 'plugin.lua');
 
-    const quinsightStr = path.basename(process.cwd()) === 'Luaver' ? 'quinsight' : `Luaver${path.sep}quinsight`;
+    const unlockAttempts = await fileUnlocked(destination);
+    fs.writeFileSync(destination, output);
+
+    const quinsightStr =
+        path.basename(process.cwd()) === 'Luaver'
+            ? 'quinsight'
+            : `Luaver${path.sep}quinsight`;
 
     const intellisensePath = path.join(quinsightStr, 'intellisense.lua');
-    if (fs.existsSync(intellisensePath)) fs.copyFileSync(intellisensePath, getAbsolutePath('intellisense.lua'));
+    if (fs.existsSync(intellisensePath))
+        fs.copyFileSync(intellisensePath, getAbsolutePath('intellisense.lua'));
 
-    return paths.length;
+    return [paths.length, unlockAttempts];
 }
 
 export async function printLuaverError(msg: string) {
     renderBigLine(1, chalk.red);
     console.error(
-        wrapAnsi(chalk.bgRedBright('LUAVER ERROR') + chalk.red(' ' + msg), process.stdout.columns, { trim: false }),
+        wrapAnsi(
+            chalk.bgRedBright('LUAVER ERROR') + chalk.red(' ' + msg),
+            process.stdout.columns,
+            { trim: false },
+        ),
     );
     renderBigLine(2, chalk.red);
 }

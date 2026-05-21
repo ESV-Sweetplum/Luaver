@@ -4,7 +4,7 @@ import writeSettingsIni from './utils/writeSettingsIni';
 
 console.log(chalk.blueBright("Running the transpiler's initial steps..."));
 
-transpile().then(ct => {
+transpile().then(([ct, ua]) => {
     if (ct === -1) {
         console.log(chalk.red(chalk.bold('An error occurred.')));
         process.exit(1);

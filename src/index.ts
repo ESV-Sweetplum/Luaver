@@ -170,8 +170,8 @@ export default async function transpile(
     }
 
     const destination = getAbsolutePath(options.destination ?? 'plugin.lua');
-
     const unlockAttempts = await fileUnlocked(destination);
+
     fs.writeFileSync(destination, output);
 
     const quinsightStr =

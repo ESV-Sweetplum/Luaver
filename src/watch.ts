@@ -6,7 +6,7 @@ import transpile from '.';
 import writeSettingsIni from './utils/writeSettingsIni';
 import './utils/logWrapped';
 
-let transpileLock = true;
+let transpileLock = false;
 
 const debounce = (fn: Function, ms = 300) => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -21,7 +21,7 @@ chokidar.watch(luaverConfig?.sources ?? [], { ignoreInitial: true }).on(
     debounce(
         (event: keyof chokidar.FSWatcherEventMap, path: string) =>
             main(event, path),
-        200,
+        250,
     ),
 );
 

@@ -48,10 +48,6 @@
         "trim_trailing_whitespace": "true"
     },
     "format.enable": true,
-    "runtime.nonstandardSymbol": [
-        "|lambda|",
-        "!="
-    ],
     "runtime.version": "Lua 5.2",
     "type.castNumberToInteger": true,
     "type.checkTableShape": true,

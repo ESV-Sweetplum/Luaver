@@ -123,7 +123,7 @@ export function searchAndDestroyOneLiners(
     );
 
     logs.add(
-        `--- Trimmed string: --- \n${joinedInput.slice(endIdx, nextLineSeparator + 1).trim()}\n\n`,
+        `--- Trimmed unused function data: --- \n${joinedInput.slice(endIdx, nextLineSeparator + 1).trim()}\n\n`,
     );
 
     return joinedInput;
@@ -178,7 +178,7 @@ export function searchAndDestroyMultilineFunctions(
     );
 
     logs.add(
-        `--- Trimmed string: --- \n${joinedInput.slice(prevStartIdx, endIdx).trim()}\n\n`,
+        `--- Trimmed unused function data: --- \n${joinedInput.slice(prevStartIdx, endIdx).trim()}\n\n`,
     );
 
     return joinedInput;

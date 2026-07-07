@@ -12,6 +12,15 @@ const logs = {
         const latestPath = getAbsolutePath(`logs/Luaver/latest.log`);
         fs.writeFileSync(curPath, output.join('\n'));
         fs.writeFileSync(latestPath, output.join('\n'));
+
+        fs.readdirSync(logFolder).forEach(f => {
+            if (f.includes('latest.log')) return;
+            const creationTime = Date.parse(f);
+            const rn = Date.now();
+            if (rn - creationTime > 2.592e8) {
+                fs.rmSync(f);
+            }
+        });
     },
     reset: () => (output = []),
 };

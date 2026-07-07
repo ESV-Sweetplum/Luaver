@@ -6,6 +6,8 @@ let output: string[] = [];
 const logs = {
     add: (msg: string) => output.push(msg),
     finalize: () => {
+        const logFolder = getAbsolutePath(`Luaver/logs`);
+        if (!fs.existsSync(logFolder)) fs.mkdirSync(logFolder);
         const latestPath = getAbsolutePath(`Luaver/logs/latest.log`);
         fs.writeFileSync(latestPath, output.join('\n'));
     },

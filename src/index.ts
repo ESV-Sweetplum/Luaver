@@ -75,6 +75,7 @@ export default async function transpile(
 
     logs.add(`Sources obtained:`);
     paths.forEach(p => logs.add(p));
+    logs.add(`Sorting paths by entry points.`);
 
     const [nonEntryPaths, entryPaths] = paths.reduce(
         ([a1, a2]: [string[], string[]], path) => {
@@ -106,24 +107,20 @@ export default async function transpile(
     const pluginProcessors = processors.filter(
         processor => processor.context === 'plugin',
     );
-    const fileData = nonEntryPaths.map((path: string) =>
+    const normalFileData = nonEntryPaths.map((path: string) =>
         processLuaFile(getAndTrimFile(path), fileProcessors),
     );
 
-    logs.add(`Compiling entry points:`);
+    logs.add(`Processed existing lua files via file processors.`);
+    logs.add(`Preparing entry point files:`);
 
     const entryFileData: Record<string, string[]> = entryPaths.reduce(
         (obj: Record<string, string[]>, path: string) => {
             if (!entryPoints.some(e => path.includes(`_${e}`))) return obj;
             logs.add(`- ${path}`);
             const key = path.split('_')[1].split('.lua')[0];
-            const fileData = processLuaFile(
-                getAndTrimFile(path),
-                fileProcessors,
-            );
-            obj[key] = Array.isArray(fileData)
-                ? fileData
-                : fileData.split(luaverConfig.lineSeparator);
+            const fileData = getAndTrimFile(path);
+            obj[key] = fileData.split(luaverConfig.lineSeparator);
 
             const fnDefLine = obj[key].findIndex(line =>
                 line.includes(`function ${key}()`),
@@ -143,7 +140,7 @@ export default async function transpile(
         {},
     );
 
-    logs.add(`Compiling the given .lua files:`);
+    logs.add(`Compiling the given entry point files into the plugin:`);
     entryPaths.forEach((path: string) => {
         if (entryPoints.some(e => path.includes(`_${e}`))) return;
         logs.add(`- ${path}`);
@@ -161,12 +158,15 @@ export default async function transpile(
         }
     });
 
-    let output: string | string[] = fileData.join(luaverConfig.lineSeparator);
+    let output: string | string[] = normalFileData.join(
+        luaverConfig.lineSeparator,
+    );
 
-    logs.add(`Adding entry point headers.`);
+    logs.add(`Adding entry point functions.`);
     Object.entries(entryFileData).forEach(([entry, fileData]) => {
         output = `${output}${luaverConfig.lineSeparator}function ${entry}()${luaverConfig.lineSeparator}${fileData.join(luaverConfig.lineSeparator)}${luaverConfig.lineSeparator}end`;
     });
+
     logs.add(`Processing existing output.`);
     output = processLuaFile(output, pluginProcessors);
     if (Array.isArray(output)) output = output.join(luaverConfig.lineSeparator);
@@ -188,6 +188,7 @@ export default async function transpile(
     const destination = getAbsolutePath(options.destination ?? 'plugin.lua');
     const unlockAttempts = await fileUnlocked(destination);
 
+    logs.add(`Writing file to plugin.lua.`);
     fs.writeFileSync(destination, output);
 
     const quinsightStr =
@@ -195,10 +196,12 @@ export default async function transpile(
             ? 'quinsight'
             : `Luaver${path.sep}quinsight`;
 
+    logs.add(`Writing intellisense file.`);
     const intellisensePath = path.join(quinsightStr, 'intellisense.lua');
     if (fs.existsSync(intellisensePath))
         fs.copyFileSync(intellisensePath, getAbsolutePath('intellisense.lua'));
 
+    logs.add(`Completed transpilation.`);
     return [paths.length, unlockAttempts];
 }
 

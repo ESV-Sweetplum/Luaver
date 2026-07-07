@@ -117,13 +117,14 @@ export function searchAndDestroyOneLiners(
             joinedInput.lastIndexOf(config.lineSeparator, startIdx - 2) + 1;
         prevLine = joinedInput.slice(startIdx, endIdx);
     }
+
+    logs.add(
+        `--- Trimming unused function data: --- \n${joinedInput.slice(endIdx, nextLineSeparator + 1).trim()}\n\n`,
+    );
+
     joinedInput = joinedInput.replace(
         joinedInput.slice(endIdx, nextLineSeparator + 1),
         '',
-    );
-
-    logs.add(
-        `--- Trimmed unused function data: --- \n${joinedInput.slice(endIdx, nextLineSeparator + 1).trim()}\n\n`,
     );
 
     return joinedInput;
@@ -172,13 +173,13 @@ export function searchAndDestroyMultilineFunctions(
         endIdx = joinedInput.indexOf(config.lineSeparator, endIdx + 1);
     }
 
+    logs.add(
+        `--- Trimming unused function data: --- \n${joinedInput.slice(prevStartIdx, endIdx).trim()}\n\n`,
+    );
+
     joinedInput = joinedInput.replace(
         joinedInput.slice(prevStartIdx, endIdx),
         '',
-    );
-
-    logs.add(
-        `--- Trimmed unused function data: --- \n${joinedInput.slice(prevStartIdx, endIdx).trim()}\n\n`,
     );
 
     return joinedInput;

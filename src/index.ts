@@ -13,7 +13,7 @@ import getProcessors, { getInternalProcessors } from './utils/getProcessors';
 import wrapAnsi from 'wrap-ansi';
 import './utils/logWrapped';
 import fileUnlocked from './utils/fileUnlocked';
-import initializeOutputLog from './logs/initialize';
+import logs from './logs/initialize';
 
 const entryPoints = ['draw', 'awake'];
 
@@ -21,7 +21,7 @@ export default async function transpile(
     options: Partial<TranspilerOptions> = {},
 ) {
     const missingConfigParams = checkConfigValidity();
-    initializeOutputLog();
+    logs.reset();
 
     if (
         missingConfigParams.length &&

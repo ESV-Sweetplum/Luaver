@@ -8,7 +8,7 @@ export async function getInternalProcessors(
 ): Promise<LuaProcessor[]> {
     const processors = await getProcessors(
         'dist/_processors',
-        (p: string) => disableOptimizers ?? p.includes('.bypass.'),
+        disableOptimizers ? (p: string) => p.includes('.bypass.') : () => true,
     );
 
     return processors;

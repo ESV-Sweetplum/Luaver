@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import getAbsolutePath from '../utils/getAbsolutePath';
 import luaverConfig from '../utils/getConfig';
 import chalk from 'chalk';
@@ -16,21 +17,26 @@ const logs = {
             `logs/${new Date().toISOString().replaceAll(':', ',')}.log`,
         );
         const latestPath = getAbsolutePath(`logs/latest.log`);
-        fs.writeFileSync(curPath, output.join('\n'));
-        fs.writeFileSync(latestPath, output.join('\n'));
 
         fs.readdirSync(logFolder).forEach(f => {
             if (f.includes('latest.log')) return;
-            const creationTime = Date.parse(f.replaceAll(',', ':'));
+            const creationTime = new Date(
+                f.replace('.log', '').replaceAll(',', ':'),
+            ).getTime();
             const rn = Date.now();
-            if (rn - creationTime > 2.592e8) {
-                fs.rmSync(f);
+            const expiryTime = 24 * 60 * 60 * 1000; // 1 day
+            if (rn - creationTime > expiryTime) {
+                fs.rmSync(path.join(logFolder, f));
             }
         });
+
+        fs.writeFileSync(curPath, output.join('\n'));
+        fs.writeFileSync(latestPath, output.join('\n'));
+
         const gitignore = fs
             .readFileSync(getAbsolutePath('.gitignore'), 'utf-8')
             .split(luaverConfig?.lineSeparator ?? '\n');
-        if (!gitignore.every(p => p.includes('logs'))) {
+        if (!gitignore.some(p => p.includes('logs'))) {
             console.log(
                 chalk.red(
                     'Please add the "logs" folder to your .gitignore file.',

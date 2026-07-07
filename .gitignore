@@ -6,4 +6,4 @@ settings.ini
 intellisense.lua
 luaverConfig.json5
 plugin
-logs
+logs 

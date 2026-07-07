@@ -13,6 +13,7 @@ import getProcessors, { getInternalProcessors } from './utils/getProcessors';
 import wrapAnsi from 'wrap-ansi';
 import './utils/logWrapped';
 import fileUnlocked from './utils/fileUnlocked';
+import initializeOutputLog from './logs/initialize';
 
 const entryPoints = ['draw', 'awake'];
 
@@ -20,6 +21,7 @@ export default async function transpile(
     options: Partial<TranspilerOptions> = {},
 ) {
     const missingConfigParams = checkConfigValidity();
+    initializeOutputLog();
 
     if (
         missingConfigParams.length &&
@@ -51,7 +53,7 @@ export default async function transpile(
     }); // Resets all counters to prevent strange file inconsistencies
 
     const processors = luaverConfig.disableDefaultProcessors
-        ? []
+        ? await getInternalProcessors(true)
         : await getInternalProcessors();
     for (const p of luaverConfig.externalProcessors ?? []) {
         processors.push(...(await getProcessors(p)));

@@ -1,13 +1,12 @@
 import LuaverConfig from '../interfaces/luaverConfig';
 import acBuilder from 'ahocorasick';
 import getFunctionList from '../utils/getFunctionList';
+import { writeFileSync } from 'fs';
 
 export default function LintUnusedFunctions(
     input: string[],
     config: LuaverConfig,
 ) {
-    const separatorLength = config.lineSeparator.length;
-
     let linted = false;
     let iterationCount = 0;
     let joinedInput = `${config.lineSeparator}${input.join(config.lineSeparator)}${config.lineSeparator}`;
@@ -47,7 +46,7 @@ export default function LintUnusedFunctions(
                 return obj;
             }, {});
 
-        const realAcResult = Object.entries(acResult).reduce(
+        const unusedFunctionResult = Object.entries(acResult).reduce(
             (obj: Record<string, number>, [k, v]: [string, number[]]) => {
                 if (v.length > 1) {
                     return obj;
@@ -59,58 +58,119 @@ export default function LintUnusedFunctions(
             {},
         );
 
-        const finalEntries = Object.entries(realAcResult);
+        const finalEntries = Object.entries(unusedFunctionResult);
 
         if (finalEntries.length) {
             linted = false;
         }
 
-        const outputLength = joinedInput.length;
-
         finalEntries.reverse().forEach(([k, v]: [string, number]) => {
-            let startIdx = joinedInput.lastIndexOf(
+            const nextLineSeparator = joinedInput.indexOf(
                 config.lineSeparator,
-                Math.max(0, v - k.length - 11),
-            ); // 1 from \n, 9 from `function `, 1 extra to compensate
-            let prevStartIdx = startIdx + 1;
-            if (startIdx === 0) prevStartIdx = 0;
-            while (joinedInput.charAt(prevStartIdx) !== config.lineSeparator)
-                prevStartIdx++;
-            let endIdx = v;
-            let endFound = false;
-
-            while (startIdx >= 0) {
-                if (
-                    joinedInput.slice(
-                        startIdx + separatorLength,
-                        startIdx + separatorLength + 3,
-                    ) !== '---'
+                v,
+            );
+            if (
+                new RegExp(String.raw`^function ${k}\(.+ end$`).test(
+                    joinedInput.slice(v - k.length - 9, nextLineSeparator),
                 )
-                    break;
-                prevStartIdx = startIdx;
-                startIdx = joinedInput.lastIndexOf(
-                    config.lineSeparator,
-                    startIdx - 1,
+            ) {
+                joinedInput = searchAndDestroyOneLiners(
+                    config,
+                    joinedInput,
+                    k,
+                    v,
+                    nextLineSeparator,
                 );
+                return;
             }
 
-            while (endIdx < outputLength && !endFound) {
-                if (
-                    joinedInput.slice(
-                        endIdx + separatorLength,
-                        endIdx + separatorLength + 3,
-                    ) === 'end'
-                )
-                    endFound = true;
-                endIdx = joinedInput.indexOf(config.lineSeparator, endIdx + 1);
-            }
-
-            joinedInput = joinedInput.replace(
-                joinedInput.slice(prevStartIdx, endIdx),
-                '',
+            joinedInput = searchAndDestroyMultilineFunctions(
+                config,
+                joinedInput,
+                k,
+                v,
             );
         });
     }
 
     return joinedInput.trim();
+}
+
+export function searchAndDestroyOneLiners(
+    config: LuaverConfig,
+    joinedInput: string,
+    functionName: string,
+    functionIndex: number,
+    nextLineSeparator: number,
+) {
+    let startIdx =
+        joinedInput.lastIndexOf(
+            config.lineSeparator,
+            functionIndex - functionName.length - 11,
+        ) + 1;
+    let endIdx = functionIndex - functionName.length - 9;
+    let prevLine = joinedInput.slice(startIdx, endIdx);
+    while (prevLine.startsWith('---')) {
+        endIdx = startIdx;
+        startIdx =
+            joinedInput.lastIndexOf(config.lineSeparator, startIdx - 2) + 1;
+        prevLine = joinedInput.slice(startIdx, endIdx);
+    }
+    joinedInput = joinedInput.replace(
+        joinedInput.slice(endIdx, nextLineSeparator + 1),
+        '',
+    );
+
+    return joinedInput;
+}
+
+export function searchAndDestroyMultilineFunctions(
+    config: LuaverConfig,
+    joinedInput: string,
+    functionName: string,
+    functionIndex: number,
+) {
+    const separatorLength = config.lineSeparator.length;
+
+    let startIdx = joinedInput.lastIndexOf(
+        config.lineSeparator,
+        Math.max(0, functionIndex - functionName.length - 11),
+    ); // 1 from \n, 9 from `function `, 1 extra to compensate
+
+    let prevStartIdx = startIdx + 1;
+    if (startIdx === 0) prevStartIdx = 0;
+    while (joinedInput.charAt(prevStartIdx) !== config.lineSeparator)
+        prevStartIdx++;
+    let endIdx = functionIndex;
+    let endFound = false;
+
+    while (startIdx >= 0) {
+        if (
+            joinedInput.slice(
+                startIdx + separatorLength,
+                startIdx + separatorLength + 3,
+            ) !== '---'
+        )
+            break;
+        prevStartIdx = startIdx;
+        startIdx = joinedInput.lastIndexOf(config.lineSeparator, startIdx - 1);
+    }
+
+    while (endIdx < joinedInput.length && !endFound) {
+        if (
+            joinedInput.slice(
+                endIdx + separatorLength,
+                endIdx + separatorLength + 3,
+            ) === 'end'
+        )
+            endFound = true;
+        endIdx = joinedInput.indexOf(config.lineSeparator, endIdx + 1);
+    }
+
+    joinedInput = joinedInput.replace(
+        joinedInput.slice(prevStartIdx, endIdx),
+        '',
+    );
+
+    return joinedInput;
 }

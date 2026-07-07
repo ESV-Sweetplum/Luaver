@@ -1,4 +1,5 @@
 import LuaProcessor from '../interfaces/luaProcessor';
+import logs from '../logs/initialize';
 import { getFilesRecursively } from './getFilesRecursively';
 import * as path from 'path';
 
@@ -23,8 +24,10 @@ export default async function getProcessors(
     const requiredExtensions = ['.plugin.', '.file.'];
 
     for (const processorPath of processorPaths) {
+        logs.add(`Testing processor from ${processorPath}...`);
         if (requiredExtensions.every(e => !processorPath.includes(e))) continue;
         if (filterFn && !filterFn(p)) continue;
+        logs.add(`Processor ${processorPath} has passed.`);
         const processor: LuaProcessor = await import(
             path.join(__dirname, '../..', processorPath)
         );

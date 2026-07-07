@@ -5,6 +5,7 @@ import luaverConfig, { reloadConfig } from './utils/getConfig';
 import transpile from '.';
 import writeSettingsIni from './utils/writeSettingsIni';
 import './utils/logWrapped';
+import logs from './logs/initialize';
 
 let transpileLock = false;
 
@@ -49,6 +50,7 @@ async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
     transpileLock = true;
 
     const [fileCount, unlockAttempts] = await transpile();
+    logs.finalize();
     const endTime = performance.now();
     transpileLock = false;
     if (fileCount === -1) return;
@@ -60,6 +62,7 @@ async function main(event: keyof chokidar.FSWatcherEventMap, path: string) {
 }
 
 transpile().then(([ct, att]) => {
+    logs.finalize();
     if (ct === -1) {
         process.exit(1);
     }

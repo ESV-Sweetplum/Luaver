@@ -9,7 +9,7 @@ const logs = {
         const logFolder = getAbsolutePath('logs');
         if (!fs.existsSync(logFolder)) fs.mkdirSync(logFolder);
         const curPath = getAbsolutePath(
-            `logs/${new Date().toISOString().replaceAll(':', ',')}`,
+            `logs/${new Date().toISOString().replaceAll(':', ',')}.log`,
         );
         const latestPath = getAbsolutePath(`logs/latest.log`);
         fs.writeFileSync(curPath, output.join('\n'));

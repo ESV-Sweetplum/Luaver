@@ -56,6 +56,7 @@ export default async function transpile(
     const processors = luaverConfig.disableDefaultProcessors
         ? await getInternalProcessors(true)
         : await getInternalProcessors();
+
     for (const p of luaverConfig.externalProcessors ?? []) {
         processors.push(...(await getProcessors(p)));
     }

@@ -2,6 +2,7 @@ import LuaverConfig from '../interfaces/luaverConfig';
 import acBuilder from 'ahocorasick';
 import getFunctionList from '../utils/getFunctionList';
 import { writeFileSync } from 'fs';
+import logs from '../logs/initialize';
 
 export default function LintUnusedFunctions(
     input: string[],
@@ -121,6 +122,10 @@ export function searchAndDestroyOneLiners(
         '',
     );
 
+    logs.add(
+        `--- Trimmed string: --- \n${joinedInput.slice(endIdx, nextLineSeparator + 1).trim()}\n\n`,
+    );
+
     return joinedInput;
 }
 
@@ -170,6 +175,10 @@ export function searchAndDestroyMultilineFunctions(
     joinedInput = joinedInput.replace(
         joinedInput.slice(prevStartIdx, endIdx),
         '',
+    );
+
+    logs.add(
+        `--- Trimmed string: --- \n${joinedInput.slice(prevStartIdx, endIdx).trim()}\n\n`,
     );
 
     return joinedInput;

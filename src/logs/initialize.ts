@@ -8,6 +8,8 @@ let output: string[] = [];
 const logs = {
     add: (msg: string) => output.push(msg),
     finalize: () => {
+        output.push('\n--- OUTPUT ENDED.---');
+
         const logFolder = getAbsolutePath('logs');
         if (!fs.existsSync(logFolder)) fs.mkdirSync(logFolder);
         const curPath = getAbsolutePath(

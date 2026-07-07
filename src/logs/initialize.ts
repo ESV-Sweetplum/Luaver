@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 import getAbsolutePath from '../utils/getAbsolutePath';
+import luaverConfig from '../utils/getConfig';
+import chalk from 'chalk';
 
 let output: string[] = [];
 
@@ -23,6 +25,16 @@ const logs = {
                 fs.rmSync(f);
             }
         });
+        const gitignore = fs
+            .readFileSync(getAbsolutePath('.gitignore'), 'utf-8')
+            .split(luaverConfig?.lineSeparator ?? '\n');
+        if (!gitignore.every(p => p.includes('logs'))) {
+            console.log(
+                chalk.red(
+                    'Please add the "logs" folder to your .gitignore file.',
+                ),
+            );
+        }
     },
     reset: () => (output = []),
 };

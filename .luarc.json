@@ -49,16 +49,11 @@
     },
     "format.enable": true,
     "runtime.version": "Lua 5.2",
-    "type.castNumberToInteger": true,
+    "type.castNumberToInteger": false,
     "type.checkTableShape": true,
     "type.inferParamType": true,
-    "workspace.ignoreDir": [
-        ".vscode",
-        "plugin.lua"
-    ],
+    "workspace.ignoreDir": [".vscode", "plugin.lua"],
     "workspace.ignoreSubmodules": false,
-    "workspace.library": [
-        "intellisense.lua"
-    ],
+    "workspace.library": ["intellisense.lua"],
     "workspace.useGitIgnore": true
 }

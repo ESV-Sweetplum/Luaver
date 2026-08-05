@@ -1,5 +1,5 @@
 import AdmZip = require('adm-zip');
-import transpile from '.';
+import transpiler from '.';
 import chalk from 'chalk';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -19,11 +19,13 @@ export default async function build() {
         ),
     );
 
-    const [fileCount1, unlockAttempts1] = await transpile({
+    const [fileCount1, unlockAttempts1] = await transpiler({
         distro: 'github',
         environment: 'production',
         destination: 'githubTemp.lua',
+        logged: false,
     });
+
     if (fileCount1 === -1) return;
     const pluginGithub = fs.readFileSync(
         getAbsolutePath('githubTemp.lua'),
@@ -46,10 +48,11 @@ export default async function build() {
         ),
     );
 
-    const [fileCount2, unlockAttempts2] = await transpile({
+    const [fileCount2, unlockAttempts2] = await transpiler({
         distro: 'steam',
         environment: 'production',
         destination: 'steamTemp.lua',
+        logged: false,
     });
     if (fileCount2 === -1) return;
     const pluginSteam = fs.readFileSync(
@@ -205,7 +208,7 @@ export default async function build() {
     }
 
     // Undoes any changes done by the build process.
-    transpile();
+    transpiler();
 }
 
 build();

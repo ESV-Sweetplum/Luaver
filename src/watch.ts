@@ -22,7 +22,7 @@ chokidar.watch(luaverConfig?.sources ?? [], { ignoreInitial: true }).on(
     debounce(
         (event: keyof chokidar.FSWatcherEventMap, path: string) =>
             main(event, path),
-        250,
+        1,
     ),
 );
 

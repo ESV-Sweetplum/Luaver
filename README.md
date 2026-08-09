@@ -108,30 +108,30 @@ interface LuaverConfigSchema {
 }
 ```
 Plugin name, version, author, and description are specified in the first four entries of the config.
-#### config.VersionInPluginName
+#### config.versionInPluginName
 Specifies if the `pluginVersion` is appended onto the plugin name in the `settings.ini` file, which changes the name of the plugin in-game.
 
-#### config.Sources
+#### config.sources
 A list of paths that specify which folders Luaver should take `.lua` files from.
 
-#### config.OutDir
+#### config.outDir
 Specifies the directory (relative to the root, NOT `Luaver`) in which the output `plugin.lua` gets placed into. Should almost always be `/`.
 
-#### config.LineSeparator
+#### config.lineSeparator
 Specifies the line ending used in `plugin.lua`. Should almost always be `\n`, corresponding to LF (no carriage return).
 
-#### config.DontRandomizeSeed
+#### config.dontRandomizeSeed
 By default, Luaver establishes a true random seed via the `math.randomseed` function. Setting this configuration to `true` removes this. Should almost always be `false`.
 
-#### config.WorkshopFolder
+#### config.workshopFolder
 Defines the location of Steam-related assets. If the path is given, the folder should include two files:
 - `steam_workshop_id.txt`: The steam workshop id, in a text file. Used for update checking and is only provided when your plugin is uploaded through the game.
 - `steam_workshop_preview.png`: A required preview image.
 
-#### config.DisableDefaultProcessors
+#### config.disableDefaultProcessors
 If `true`, disables the two default processors that save file size and compute time (ipair optimization and unused function linting). Should only be enabled for debugging purposes.
 
-#### config.ExternalProcessors
+#### config.externalProcessors
 Similar to `sources`, but provides a list of paths leading to folders with TypeScript-based string processors.
 
 ## Support

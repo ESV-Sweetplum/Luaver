@@ -1,8 +1,4 @@
-<div align="center">
-	<h1>
-		Luaver
-	</h1>
-</div>
+# Luaver
 
 ###### Latest Release: August 8, 2026
 

@@ -14,6 +14,7 @@ import wrapAnsi from 'wrap-ansi';
 import './utils/logWrapped';
 import fileUnlocked from './utils/fileUnlocked';
 import logs from './logs/initialize';
+import gatherFunctionData, { functionData } from './utils/gatherFunctionData';
 
 const entryPoints = ['draw', 'awake'];
 
@@ -67,7 +68,7 @@ export default async function transpile(
 
     const paths = luaverConfig.sources
         .map((source: string) =>
-            getFilesRecursively(path.join(__dirname, '..', source)).sort(
+            getFilesRecursively(path.join(__dirname, '..', source), true).sort(
                 (a: string, b: string) =>
                     +b.includes('.priority.') - +a.includes('.priority.'),
             ),
@@ -84,7 +85,10 @@ export default async function transpile(
     const [nonEntryPaths, entryPaths] = paths.reduce(
         ([a1, a2]: [string[], string[]], path) => {
             (entryPoints.some(
-                e => path.includes(`.${e}.`) || path.includes(`_${e}`),
+                e =>
+                    (path.includes(`.${e}.`) &&
+                        !/Luaver[\\\/]embedded/.test(path)) ||
+                    path.includes(`_${e}`),
             )
                 ? a2
                 : a1
@@ -112,8 +116,16 @@ export default async function transpile(
         processor => processor.context === 'plugin',
     );
     const normalFileData = nonEntryPaths.map((path: string) =>
-        processLuaFile(getAndTrimFile(path), fileProcessors),
+        processLuaFile(
+            gatherFunctionData(path, getAndTrimFile(path)),
+            fileProcessors,
+        ),
     );
+
+    if (options.logged)
+        logs.add(
+            `Gathered function data: ${JSON.stringify(functionData, null, 4)}`,
+        );
 
     if (options.logged)
         logs.add(`Processed existing lua files via file processors.`);

@@ -10,6 +10,8 @@ export default function gatherFunctionData(p: string, str: string) {
         .split(luaverConfig.lineSeparator)
         .filter(l => !l.startsWith('--'));
 
+    if (!splitStr || !splitStr[0]) return str;
+
     if (!splitStr[0].startsWith('function')) return str;
     if (splitStr[splitStr.length - 1] !== 'end') return str;
 

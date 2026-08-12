@@ -1,0 +1,3 @@
+luaver = {}
+
+luaver.functionData = {}

@@ -85,10 +85,7 @@ export default async function transpile(
     const [nonEntryPaths, entryPaths] = paths.reduce(
         ([a1, a2]: [string[], string[]], path) => {
             (entryPoints.some(
-                e =>
-                    (path.includes(`.${e}.`) &&
-                        !/Luaver[\\\/]embedded/.test(path)) ||
-                    path.includes(`_${e}`),
+                e => path.includes(`.${e}.`) || path.includes(`_${e}`),
             )
                 ? a2
                 : a1
@@ -98,7 +95,10 @@ export default async function transpile(
         [[], []],
     );
 
-    if (entryPaths.length < entryPoints.length) {
+    if (
+        entryPaths.filter(p => !p.includes(`Luaver${path.sep}embedded`))
+            .length < entryPoints.length
+    ) {
         await printLuaverError(
             `You are missing one or more entry points. Please either add existing folders containing said entry points to your Luaver sources list, or create an entry point within an existing source.\n\nMissing: ${entryPoints
                 .filter(pt => !entryPaths.some(f => f.includes(pt)))

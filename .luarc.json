@@ -1,0 +1,60 @@
+{
+    "addonManager.enable": false,
+    "codeLens.enable": true,
+    "diagnostics.disable": [
+        "lowercase-global",
+        "duplicate-set-field",
+        "duplicate-doc-alias",
+        "unused-local",
+        "duplicate-doc-field"
+    ],
+    "diagnostics.globals": [
+        "PLUGIN_NAME",
+        "PLUGIN_AUTHOR",
+        "PLUGIN_VERSION",
+        "PLUGIN_DESCRIPTION",
+        "ENVIRONMENT",
+        "DISTRO",
+        "imgui_disable_vector_packing"
+    ],
+    "diagnostics.groupSeverity": {
+        "ambiguity": "Error",
+        "await": "Error",
+        "codestyle": "Error",
+        "conventions": "Fallback",
+        "duplicate": "Warning",
+        "global": "Fallback",
+        "luadoc": "Warning",
+        "redefined": "Fallback",
+        "strict": "Error",
+        "strong": "Warning",
+        "type-check": "Error",
+        "unbalanced": "Error",
+        "unused": "Warning"
+    },
+    "diagnostics.libraryFiles": "Disable",
+    "format.defaultConfig": {
+        "call_arg_parentheses": "keep",
+        "charset": "utf-8",
+        "continuation_indent": "4",
+        "end_of_line": "lf",
+        "indent_size": "4",
+        "indent_style": "space",
+        "insert_final_newline": "true",
+        "max_line_length": "120",
+        "quote_style": "single",
+        "spelling_language": "en-us",
+        "trailing_table_separator": "smart",
+        "trim_trailing_whitespace": "true"
+    },
+    "format.enable": true,
+    "runtime.nonstandardSymbol": ["|lambda|", "!="],
+    "runtime.version": "Lua 5.2",
+    "type.castNumberToInteger": false,
+    "type.checkTableShape": true,
+    "type.inferParamType": true,
+    "workspace.ignoreDir": [".vscode", "plugin.lua"],
+    "workspace.ignoreSubmodules": false,
+    "workspace.library": ["intellisense.lua"],
+    "workspace.useGitIgnore": true
+}

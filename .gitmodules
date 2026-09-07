@@ -1,0 +1,3 @@
+[submodule "QParcel"]
+	path = QParcel
+	url = https://github.com/ESV-Sweetplum/QParcel

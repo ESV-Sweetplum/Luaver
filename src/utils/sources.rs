@@ -57,7 +57,7 @@ pub fn get_source_code(source: &str) -> Result<SourceCode, Box<dyn Error>> {
         let buf = get_file(&p)?;
         let mut buf_vctr = buf.split("\n").map(|ln| String::from(ln));
 
-        if ENTRIES.iter().any(|entry| path_string.contains(entry)) {
+        if path_string.contains("draw") || path_string.contains("awake") {
             let suffix_index = path_string
                 .find(".")
                 .expect("The given path string {path_string} didn't have a dot in it.");

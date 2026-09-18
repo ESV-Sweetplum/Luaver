@@ -10,7 +10,11 @@ export default function LintUnusedFunctions(
 ) {
     let linted = false;
     let iterationCount = 0;
-    let joinedInput = `${config.lineSeparator}${input.join(config.lineSeparator)}${config.lineSeparator}`;
+    let joinedInput =
+        `${config.lineSeparator}${input.join(config.lineSeparator)}${config.lineSeparator}`.replaceAll(
+            /\r?\n +(?=\.)/g,
+            '',
+        );
 
     while (!linted && iterationCount < 10) {
         iterationCount++;

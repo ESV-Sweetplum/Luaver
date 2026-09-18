@@ -1,0 +1,13 @@
+{
+    plugin_version: "1.0.0",
+    plugin_name: "plumosuSV",
+    plugin_author: "plummyyummy",
+    plugin_description: "The simple solution to osu! SV making.",
+    out_dir: "./",
+    sources: [
+        "QParcel",
+        "plugin",
+    ],
+    line_separator: "LF",
+    workshop_folder: "",
+}

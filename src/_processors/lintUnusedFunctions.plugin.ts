@@ -36,6 +36,8 @@ export default function LintUnusedFunctions(
                     `= ${fn}`,
                     `${fn} {`,
                     `${fn}{`,
+                    `${fn} }`,
+                    `${fn}\}`,
                 ])
                 .flat(),
         );

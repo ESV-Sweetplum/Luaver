@@ -131,8 +131,9 @@ export default async function transpile(
         logs.add(`Processed existing lua files via file processors.`);
     if (options.logged) logs.add(`Preparing entry point files:`);
 
-    const entryFileData: Record<string, string[]> = entryPaths.reduce(
-        (obj: Record<string, string[]>, path: string) => {
+    const entryFileData: Record<string, string[]> = entryPaths
+        .sort((a, b) => +b.includes('.precurse.') - +a.includes('.precurse.'))
+        .reduce((obj: Record<string, string[]>, path: string) => {
             if (!entryPoints.some(e => path.includes(`_${e}`))) return obj;
             if (options.logged) logs.add(`- ${path}`);
             const key = path.split('_')[1].split('.lua')[0];
@@ -153,9 +154,7 @@ export default async function transpile(
                 }
             }
             return obj;
-        },
-        {},
-    );
+        }, {});
 
     if (options.logged)
         logs.add(`Compiling the given entry point files into the plugin:`);
@@ -169,11 +168,7 @@ export default async function transpile(
             ? fileData
             : fileData.split('\n');
 
-        if (path.includes('.precurse.')) {
-            entryFileData[key].unshift(...insertionInfo);
-        } else {
-            entryFileData[key].push(...insertionInfo);
-        }
+        entryFileData[key].push(...insertionInfo);
     });
 
     let output: string | string[] = normalFileData.join(

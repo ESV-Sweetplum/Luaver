@@ -15,6 +15,7 @@ import './utils/logWrapped';
 import fileUnlocked from './utils/fileUnlocked';
 import logs from './logs/initialize';
 import gatherFunctionData, { functionData } from './utils/gatherFunctionData';
+import getPriorityScore from './utils/getPriorityScore';
 
 const entryPoints = ['draw', 'awake'];
 
@@ -70,7 +71,7 @@ export default async function transpile(
         .map((source: string) =>
             getFilesRecursively(path.join(__dirname, '..', source), true).sort(
                 (a: string, b: string) =>
-                    +b.includes('.priority.') - +a.includes('.priority.'),
+                    getPriorityScore(b) - getPriorityScore(a),
             ),
         )
         .flat()
